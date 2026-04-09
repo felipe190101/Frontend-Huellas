@@ -1,0 +1,92 @@
+<section class="admin-planes">
+  <h1>📦 Gestión de Planes</h1>
+
+  <!-- 🔹 Card para agregar plan -->
+  <div class="agregar-plan-card">
+  <h2> Agregar nuevo plan</h2>
+
+  <form class="form-agregar-plan" (ngSubmit)="agregarPlan()">
+    
+    <div class="fila">
+      <div class="input-group">
+        <label>Nombre del plan</label>
+        <input type="text" [(ngModel)]="nuevoPlan.nombre_plan" name="nombre_plan" required placeholder="Ej. Plan Esencia" />
+      </div>
+
+      <div class="input-group">
+        <label>Almacenamiento (GB)</label>
+        <input type="number" [(ngModel)]="nuevoPlan.almacenamiento_max" name="almacenamiento_max" min="1" placeholder="Ej. 25" />
+      </div>
+
+      <div class="input-group">
+        <label>Máx. Beneficiarios</label>
+        <input type="number" [(ngModel)]="nuevoPlan.beneficiarios_max" name="beneficiarios_max" min="1" placeholder="Ej. 3" />
+      </div>
+    </div>
+
+    <div class="fila">
+      <div class="input-group">
+        <label>Precio mensual (COP)</label>
+        <input type="number" [(ngModel)]="nuevoPlan.precio_mensual" name="precio_mensual" min="0" placeholder="Ej. 15000" />
+      </div>
+
+      <div class="input-group">
+        <label>Precio anual (COP)</label>
+        <input type="number" [(ngModel)]="nuevoPlan.precio_anual" name="precio_anual" min="0" placeholder="Ej. 120000" />
+      </div>
+    </div>
+
+    <!-- 🔹 Descripción en una fila completa -->
+    <div class="fila-descripcion">
+      <div class="input-group full-width">
+        <label>Descripción</label>
+        <textarea [(ngModel)]="nuevoPlan.descripcion" name="descripcion" placeholder="Breve descripción del plan..."></textarea>
+      </div>
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn-agregar">
+        <i class="fa-solid fa-plus"></i> Agregar Plan
+      </button>
+    </div>
+  </form>
+</div>
+
+  <hr />
+
+<h2>Planes existentes</h2>
+<table class="tabla-planes">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Almacenamiento</th>
+      <th>Beneficiarios</th>
+      <th>Precio mensual</th>
+      <th>Precio anual</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let plan of planes">
+        <td data-label="Nombre"><input [(ngModel)]="plan.nombre_plan" /></td>
+        <td data-label="Descripción"><input [(ngModel)]="plan.descripcion" /></td>
+        <td data-label="Almacenamiento (GB)"><input type="number" [(ngModel)]="plan.almacenamiento_max" /></td>
+        <td data-label="Beneficiarios"><input type="number" [(ngModel)]="plan.beneficiarios_max" /></td>
+        <td data-label="Precio mensual (COP)"><input type="number" [(ngModel)]="plan.precio_mensual" /></td>
+        <td data-label="Precio anual (COP)"><input type="number" [(ngModel)]="plan.precio_anual" /></td>
+        <td data-label="Estado">
+            <select [(ngModel)]="plan.estado">
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+            </select>
+        </td>
+        <td data-label="Acciones">
+            <button (click)="guardarCambios(plan)">💾</button>
+            <button (click)="eliminarPlan(plan.id_plan)">🗑️</button>
+        </td>
+    </tr>
+  </tbody>
+</table>
+</section>

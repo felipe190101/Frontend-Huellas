@@ -1,0 +1,92 @@
+<div class="voluntad-container">
+  <h2>🕊️ Formulario de Voluntad de Salud</h2>
+
+  <form (ngSubmit)="enviarFormulario()" #f="ngForm">
+
+    <div class="section">
+      <h3>🩺 Voluntades</h3>
+      <label>Prefiere usar los servicios médicos a través de:</label>
+      <input type="text" [(ngModel)]="formulario.servicio_medico" name="servicio_medico" placeholder="Ej: EPS, Medicina prepagada" required />
+      
+      <label>Observación:</label>
+      <textarea [(ngModel)]="formulario.observacion_servicio" name="observacion_servicio"></textarea>
+    </div>
+
+    <div class="section">
+      <h3>📋 Información importante</h3>
+      <label>Antecedentes médicos importantes:</label>
+      <textarea [(ngModel)]="formulario.antecedentes_importantes" name="antecedentes_importantes"></textarea>
+
+      <label>Alergias y medicamentos:</label>
+      <textarea [(ngModel)]="formulario.alergias" name="alergias"></textarea>
+
+      <label>Antecedentes médicos familiares:</label>
+      <textarea [(ngModel)]="formulario.antecedentes_familiares" name="antecedentes_familiares"></textarea>
+
+      <label>Otros:</label>
+      <textarea [(ngModel)]="formulario.otros_antecedentes" name="otros_antecedentes"></textarea>
+    </div>
+
+    <div class="section">
+      <h3>❤️ Deseos vitales</h3>
+      <div class="row">
+        <label>Autorizo aplicación de eutanasia pasiva:</label>
+        <select [(ngModel)]="formulario.eutanasia_pasiva" name="eutanasia_pasiva">
+          <option value="">Seleccione</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+        <textarea [(ngModel)]="formulario.observacion_eutanasia" name="observacion_eutanasia" placeholder="Observación"></textarea>
+      </div>
+
+      <div class="row">
+        <label>Deseo preservar mi vida con todos los esfuerzos:</label>
+        <select [(ngModel)]="formulario.esfuerzos_vida" name="esfuerzos_vida">
+          <option value="">Seleccione</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+        <textarea [(ngModel)]="formulario.observacion_esfuerzos" name="observacion_esfuerzos" placeholder="Observación"></textarea>
+      </div>
+
+      <div class="row">
+        <label>Dejar que mi muerte siga su curso natural:</label>
+        <select [(ngModel)]="formulario.muerte_siga_curso" name="muerte_siga_curso">
+          <option value="">Seleccione</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+        <textarea [(ngModel)]="formulario.observacion_muerte" name="observacion_muerte" placeholder="Observación"></textarea>
+      </div>
+
+      <div class="row">
+        <label>Si es posible, morir en casa o lugar propio:</label>
+        <select [(ngModel)]="formulario.morir_en_casa" name="morir_en_casa">
+          <option value="">Seleccione</option>
+          <option value="si">Sí</option>
+          <option value="no">No</option>
+        </select>
+        <textarea [(ngModel)]="formulario.observacion_casa" name="observacion_casa" placeholder="Observación"></textarea>
+      </div>
+
+      <label>Otros deseos:</label>
+      <textarea [(ngModel)]="formulario.otros_deseos" name="otros_deseos"></textarea>
+    </div>
+
+    <div class="section">
+      <h3>👵 En caso de vejez o cuidados especiales</h3>
+      <textarea [(ngModel)]="formulario.voluntad_vejez" name="voluntad_vejez" placeholder="Describe tus deseos"></textarea>
+      <textarea [(ngModel)]="formulario.otros_vejez" name="otros_vejez" placeholder="Otros comentarios"></textarea>
+    </div>
+
+    <div class="section">
+      <h3>✝️ Creencias religiosas</h3>
+      <textarea [(ngModel)]="formulario.creencias_religiosas" name="creencias_religiosas"></textarea>
+    </div>
+
+    <div class="botones">
+      <button type="submit" class="btn-guardar">💾 Guardar</button>
+      <a routerLink="/perfil" class="btn-volver">⬅️ Volver</a>
+    </div>
+  </form>
+</div>

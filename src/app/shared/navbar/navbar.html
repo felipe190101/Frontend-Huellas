@@ -1,0 +1,50 @@
+<header class="navbar">
+  <div class="container">
+    <!-- Logo -->
+    <div class="logo">
+        <a routerLink="/">
+            <img src="/img/logo.png" alt="Logo Huellas & Legados">
+        </a>
+    </div>
+
+    <!-- Botón hamburguesa -->
+    <button class="menu-toggle" (click)="toggleMenu()">
+      ☰
+    </button>
+
+    <!-- Links -->
+    <nav class="nav-links" [class.active]="menuOpen">
+       <!-- 🔹 Mostrar según autenticación -->
+
+      <ng-container *ngIf="autenticado && usuario?.nombre_rol === 'admin'; else usuarioNormal">
+        <span class="usuario">👋 Bienvenido &nbsp;{{ usuario?.nombre }} {{ usuario?.apellido }}</span>
+
+        <a routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
+        <a routerLink="/admin/planes" routerLinkActive="active">Planes</a>
+
+        <button (click)="logout()">Cerrar sesión</button>
+      </ng-container>
+    
+      <ng-template #usuarioNormal>
+        <ng-container *ngIf="autenticado && usuario?.nombre_rol !== 'admin'; else sinSesion">
+          <span class="usuario">👋 Bienvenido &nbsp;{{ usuario?.nombre }} {{ usuario?.apellido }}</span>
+          <a routerLink="/perfil" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Mi perfil</a>
+          <a routerLink="/planes" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Planes</a>
+          <a routerLink="/beneficiarios" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Beneficiarios</a>
+          <a routerLink="/archivos" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">📂 Mis Archivos</a>
+          <button (click)="logout()">Cerrar sesión</button>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #sinSesion>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Inicio</a>
+        <a routerLink="/planes" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Planes</a>
+        <a routerLink="/nosotros" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Nosotros</a>
+        <a routerLink="/contacto" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Contacto</a>
+        <button routerLink="/login" (click)="closeMenu()">Iniciar sesión</button>
+        <button routerLink="/registro" (click)="closeMenu()">Registrarse</button>
+      </ng-template>
+    </nav>
+  </div>
+</header>
+

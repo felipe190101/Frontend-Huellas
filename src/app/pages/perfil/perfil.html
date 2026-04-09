@@ -1,0 +1,121 @@
+<div class="perfil-container">
+  <h2>Mi Perfil</h2>
+
+  <div class="perfil-grid">
+    <!-- 🔹 Columna izquierda: Datos del usuario -->
+    <div class="perfil-info">
+      <h3>Datos personales</h3>
+      <form (ngSubmit)="actualizarPerfil()" #form="ngForm">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" [(ngModel)]="usuario.nombre" name="nombre" required />
+        </div>
+
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" [(ngModel)]="usuario.apellido" name="apellido" required />
+        </div>
+
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" [(ngModel)]="usuario.correo" name="correo" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="text" [(ngModel)]="usuario.telefono" name="telefono" />
+        </div>
+
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" [(ngModel)]="usuario.direccion" name="direccion" />
+        </div>
+
+        <button type="submit">Actualizar datos</button>
+      </form>
+    </div>
+
+    <!-- 🔹 Columna derecha: Información de la suscripción -->
+    <div class="perfil-suscripcion" *ngIf="suscripcion; else noPlan">
+        <h3>Mi suscripción</h3>
+        <p><strong>Plan:</strong> {{ suscripcion.nombre_plan }}</p>
+        <p><strong>Estado:</strong> {{ suscripcion.estado }}</p>
+        <p><strong>Fecha de inicio:</strong> {{ suscripcion.fecha_inicio | date }}</p>
+        <p><strong>Fecha de finalización:</strong> {{ suscripcion.fecha_fin | date }}</p>
+        <p><strong>Precio mensual:</strong> ${{ suscripcion.precio_mensual }}</p>
+        <p><strong>Precio anual:</strong> ${{ suscripcion.precio_anual }}</p>
+
+        <button class="btn-cancelar" (click)="cancelarSuscripcion()">
+            Cancelar suscripción
+        </button>
+    </div>
+
+    <ng-template #noPlan>
+      <div class="perfil-suscripcion no-plan">
+        <h3>Sin suscripción activa</h3>
+        <p>No tienes ningún plan activo actualmente.</p>
+        <a href="/planes" class="btn-plan">Ver planes</a>
+      </div>
+    </ng-template>
+  
+  </div>
+
+  <div class="perfil-voluntades">
+    <h2>🕊️ Mis Voluntades</h2>
+
+    <div class="voluntades-grid">
+      <!-- Voluntad de Salud -->
+      <div class="voluntad-card">
+        <h3>Voluntad de Salud</h3>
+        <p>Define tus deseos sobre tratamientos médicos y cuidados de salud.</p>
+
+        <div class="acciones">
+          <!-- Botón de descarga desde Drive -->
+          <a href="https://drive.google.com/uc?export=download&id=1P8LtAIyimE_HOs6enV9SJfkhcJBBMMNs"
+            target="_blank"
+            class="btn-descargar">📥 Descargar PDF</a>
+
+          <!-- Llenar en línea -->
+          <button (click)="irAFormulario('salud')" class="btn-llenar">🖊️ Llenar en línea</button>
+        </div>
+
+        <!-- Nuevo mensaje antes de subir -->
+        <p class="instruccion-subida">
+          Una vez hayas diligenciado el formulario, por favor súbelo aquí:
+        </p>
+
+        <input type="file" (change)="subirArchivo($event, 'salud')" accept=".pdf" />
+
+        <div class="estado">
+          <span *ngIf="usuario.formulario_salud_subido" class="check">✅ Formulario cargado</span>
+          <span *ngIf="!usuario.formulario_salud_subido" class="pendiente">⬜ Pendiente</span>
+        </div>
+      </div>
+
+      <!-- Voluntad de Muerte -->
+      <div class="voluntad-card">
+        <h3>Voluntad de Muerte</h3>
+        <p>Establece tus deseos sobre disposición del cuerpo, donaciones, entre otros.</p>
+
+        <div class="acciones">
+          <a href="https://drive.google.com/uc?export=download&id=1P8LtAIyimE_HOs6enV9SJfkhcJBBMMNs"
+            target="_blank"
+            class="btn-descargar">📥 Descargar PDF</a>
+          <button (click)="irAFormulario('muerte')" class="btn-llenar">🖊️ Llenar en línea</button>
+        </div>
+
+        <p class="instruccion-subida">
+          Una vez hayas diligenciado el formulario, por favor súbelo aquí:
+        </p>
+
+        <input type="file" (change)="subirArchivo($event, 'muerte')" accept=".pdf" />
+
+        <div class="estado">
+          <span *ngIf="usuario.formulario_muerte_subido" class="check">✅ Formulario cargado</span>
+          <span *ngIf="!usuario.formulario_muerte_subido" class="pendiente">⬜ Pendiente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

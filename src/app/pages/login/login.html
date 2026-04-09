@@ -1,0 +1,40 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-section">
+      <img src="/img/logo.png" alt="Logo Huellas & Legados" />
+      <h2>Bienvenido a Huellas y Legados</h2>
+      <p>“Tu historia trasciende, tu legado vive”</p>
+    </div>
+
+    <form (ngSubmit)="iniciarSesion()">
+      <div class="form-group">
+        <label for="correo">Correo electrónico</label>
+        <input
+          type="email"
+          id="correo"
+          name="correo"
+          [(ngModel)]="credenciales.correo"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="contrasena">Contraseña</label>
+        <input
+          type="password"
+          id="contrasena"
+          name="contrasena"
+          [(ngModel)]="credenciales.contrasena"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-login">Iniciar sesión</button>
+    </form>
+
+    <div class="extra-links">
+      <p>¿No tienes una cuenta?</p>
+      <a (click)="irARegistro()">Regístrate aquí</a>
+    </div>
+  </div>
+</div>

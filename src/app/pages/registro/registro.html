@@ -1,0 +1,97 @@
+<section class="registro">
+  <div class="registro-container">
+    <h2>Crear cuenta</h2>
+    <p class="subtitulo">Únete a Huellas & Legados y comienza a construir tu legado</p>
+
+    <form (ngSubmit)="registrarUsuario()" #registroForm="ngForm">
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombres</label>
+          <input type="text" name="nombre" [(ngModel)]="usuario.nombre" required />
+        </div>
+
+        <div class="form-group">
+          <label>Apellidos</label>
+          <input type="text" name="apellido" [(ngModel)]="usuario.apellido" required />
+        </div>
+
+        <div class="form-group">
+          <label>Tipo de Documento</label>
+          <select name="tipo_documento" [(ngModel)]="usuario.tipo_documento" required>
+            <option value="">Seleccione...</option>
+            <option value="CC">Cédula de ciudadanía</option>
+            <option value="CE">Cédula de extranjería</option>
+            <option value="TI">Tarjeta de identidad</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Número de documento</label>
+          <input type="text" name="documento" [(ngModel)]="usuario.documento" required />
+        </div>
+
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" name="correo" [(ngModel)]="usuario.correo" required />
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="text" name="telefono" [(ngModel)]="usuario.telefono" />
+        </div>
+
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" name="direccion" [(ngModel)]="usuario.direccion" />
+        </div>
+
+        <div class="form-group">
+          <label>Fecha de nacimiento</label>
+          <input type="date" name="fecha_nacimiento" [(ngModel)]="usuario.fecha_nacimiento" />
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input
+            type="password"
+            name="contrasena"
+            [(ngModel)]="usuario.contrasena"
+            (input)="verificarFortaleza()"
+            required
+          />
+          <div class="password-strength" [ngClass]="nivelSeguridad"></div>
+          <p [ngClass]="nivelSeguridad">{{ mensajeSeguridad }}</p>
+        </div>
+
+        <div class="form-group">
+          <label>Confirmar contraseña</label>
+          <input
+            type="password"
+            name="confirmarContrasena"
+            [(ngModel)]="confirmarContrasena"
+            (input)="verificarCoincidencia()"
+            required
+          />
+          <p *ngIf="!contrasenasCoinciden && confirmarContrasena" class="error-text">
+            ⚠️ Las contraseñas no coinciden
+          </p>
+          <p *ngIf="contrasenasCoinciden && confirmarContrasena" class="success-text">
+            ✅ Las contraseñas coinciden
+          </p>
+        </div>
+
+        <ul class="password-rules">
+          <li [class.valid]="cumpleRequisitos.longitudOk">Mínimo 8 caracteres</li>
+          <li [class.valid]="cumpleRequisitos.tieneMayus && cumpleRequisitos.tieneMinus">
+            Mayúsculas y minúsculas
+          </li>
+          <li [class.valid]="cumpleRequisitos.tieneNumero">Al menos un número</li>
+          <li [class.valid]="cumpleRequisitos.tieneEspecial">Un carácter especial</li>
+        </ul>
+      </div>
+      <button type="submit" [disabled]="!registroForm.valid">Registrarme</button>
+    </form>
+  </div>
+</section>
+

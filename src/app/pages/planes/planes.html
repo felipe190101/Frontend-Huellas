@@ -1,0 +1,52 @@
+<section class="planes">
+
+  <!-- PARTE 1: Líneas de Servicio -->
+  <div class="lineas-servicio">
+    <h2>Líneas de Servicio</h2>
+    <div class="lineas-grid">
+      <div class="linea-item">
+        <h3>Servicio Básico</h3>
+        <p>
+          Acceso general para organizar mensajes, recuerdos y voluntades.
+        </p>
+      </div>
+      <div class="linea-item">
+        <h3>Servicio Especializado</h3>
+        <p>
+          Planes avanzados con más atributos: seguridad adicional, soporte personalizado y almacenamiento extendido.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTE 2: Planes disponibles -->
+  <div class="planes-disponibles">
+    <h2>Nuestros Planes</h2>
+
+    <div class="planes-grid">
+      <!-- 🔹 Planes dinámicos desde la base de datos -->
+      <div class="plan-card" *ngFor="let plan of planes">
+        <h3>{{ plan.nombre_plan }}</h3>
+        <p class="descripcion">{{ plan.descripcion }}</p>
+
+        <ul>
+          <li>👥 Hasta {{ plan.beneficiarios_max }} beneficiarios</li>
+          <li>💾 {{ plan.almacenamiento_max | number }} MB de almacenamiento</li>
+          <li>💰 Precio mensual: ${{ plan.precio_mensual }}</li>
+          <li>💰 Precio anual: ${{ plan.precio_anual }}</li>
+        </ul>
+
+        <button (click)="adquirirPlan(plan.id_plan)">Adquirir Plan</button>
+      </div>
+    </div>
+
+    <!-- 🔸 CTA (call to action) -->
+    <p class="cta-text">
+      ¿Deseas suscribirte o adquirir uno de nuestros planes?<br />
+      <a href="/registro">¡Regístrate aquí!</a>
+    </p>
+  </div>
+
+</section>
+
+

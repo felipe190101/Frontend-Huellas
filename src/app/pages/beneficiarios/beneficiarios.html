@@ -1,0 +1,92 @@
+<div class="contenedor">
+  <h2>👨‍👩‍👧 Beneficiarios</h2>
+
+  <button class="btn-agregar" (click)="abrirFormulario()">➕ Nuevo Beneficiario</button>
+
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Tipo Doc.</th>
+        <th>Documento</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Relación</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of beneficiarios">
+        <td>{{ b.nombre_completo }}</td>
+        <td>{{ b.tipo_documento }}</td>
+        <td>{{ b.documento }}</td>
+        <td>{{ b.correo }}</td>
+        <td>{{ b.telefono }}</td>
+        <td>{{ b.relacion }}</td>
+        <td>
+          <button class="btn-editar" (click)="abrirFormulario(b)">✏️</button>
+          <button class="btn-eliminar" (click)="eliminarBeneficiario(b.id_beneficiario)">🗑️</button>
+        </td>
+      </tr>
+      <tr *ngIf="beneficiarios.length === 0">
+        <td colspan="6" class="sin-registros">No hay beneficiarios registrados</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+ <!-- 🔹 Modal para crear o editar beneficiario -->
+    <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-content">
+        <h2>{{ modoEdicion ? 'Editar beneficiario' : 'Agregar beneficiario' }}</h2>
+
+        <form (ngSubmit)="guardarBeneficiario()" #benefForm="ngForm">
+        <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" [(ngModel)]="beneficiario.nombre" name="nombre" required />
+        </div>
+
+        <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" [(ngModel)]="beneficiario.apellido" name="apellido" required />
+        </div>
+
+        <div class="form-group">
+            <label>Tipo documento</label>
+            <select [(ngModel)]="beneficiario.tipo_documento" name="tipo_documento" required>
+            <option value="CC">Cédula de ciudadanía</option>
+            <option value="TI">Tarjeta de identidad</option>
+            <option value="CE">Cédula de extranjería</option>
+            <option value="PAS">Pasaporte</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Documento</label>
+            <input type="text" [(ngModel)]="beneficiario.documento" name="documento" required />
+        </div>
+
+        <div class="form-group">
+            <label>Correo</label>
+            <input type="email" [(ngModel)]="beneficiario.correo" name="correo" />
+        </div>
+
+        <div class="form-group">
+            <label>Teléfono</label>
+            <input type="text" [(ngModel)]="beneficiario.telefono" name="telefono" />
+        </div>
+
+        <div class="form-group">
+            <label>Relación con el titular</label>
+            <input type="text" [(ngModel)]="beneficiario.relacion" name="relacion" />
+        </div>
+
+        <div class="botones">
+            <button type="submit" class="btn-guardar">
+            {{ modoEdicion ? 'Actualizar' : 'Guardar' }}
+            </button>
+            <button type="button" class="btn-cancelar" (click)="cerrarModal()">Cancelar</button>
+        </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,232 @@
+.contenedor {
+  margin-top: 3%;
+  padding: 20px;
+}
+
+h2 {
+  color: #2b5c8a;
+  margin-bottom: 15px;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.boton-subir {
+  background-color: #3180ab;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.boton-subir:hover {
+  background-color: #276d91;
+}
+
+/* Tabla */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Encabezado */
+.tabla thead tr {
+  background: #f0f4ff;
+}
+
+.tabla th {
+  text-align: left;
+  padding: 14px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Filas */
+.tabla tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: .2s ease;
+}
+
+.tabla tbody tr:hover {
+  background: #fafbff;
+}
+
+/* Celdas */
+.tabla td {
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #444;
+}
+
+/* Links */
+.boton-ver {
+  color: #0066ff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: .2s ease;
+}
+
+.boton-ver:hover {
+  background: #e7f0ff;
+}
+
+/* Botón eliminar */
+.boton-eliminar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 8px;
+  transition: .2s ease;
+}
+
+.boton-eliminar:hover {
+  transform: scale(1.2);
+  color: #d00000;
+}
+
+.boton-permisos {
+  background-color: #4da3ff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.boton-permisos:hover {
+  background-color: #1f7ae0;
+}
+
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-permisos {
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.titulo {
+  margin: 0 0 12px;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+.archivo {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 10px;
+  word-break: break-word;
+}
+
+.descripcion {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.lista-beneficiarios {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.beneficiario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.beneficiario:hover {
+  background: #f3f4f6;
+}
+
+.beneficiario input {
+  display: none;
+}
+
+.check-custom {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #9ca3af;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.beneficiario input:checked + .check-custom {
+  background: #22c55e;
+  border-color: #22c55e;
+}
+
+.beneficiario input:checked + .check-custom::after {
+  content: "✔";
+  font-size: 12px;
+  color: white;
+}
+
+.nombre {
+  font-size: 14px;
+  color: #111827;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+
+.guardar {
+  background: #22c55e;
+  color: white;
+}
+
+.guardar:hover {
+  background: #16a34a;
+}
+
+.cerrar {
+  background: #ef4444;
+  color: white;
+}
+
+.cerrar:hover {
+  background: #dc2626;
+}
+

@@ -1,0 +1,93 @@
+<div class="contenedor">
+  <h2>📂 Mis Archivos</h2>
+
+  <div class="acciones">
+    <label class="boton-subir">
+      📸 Subir imagen
+      <input type="file" accept="image/*" (change)="subirArchivo($event, 'imagenes')" hidden>
+    </label>
+
+    <label class="boton-subir">
+      🎵 Subir audio
+      <input type="file" accept="audio/*" (change)="subirArchivo($event, 'audios')" hidden>
+    </label>
+
+    <label class="boton-subir">
+      🎬 Subir video
+      <input type="file" accept="video/*" (change)="subirArchivo($event, 'videos')" hidden>
+    </label>
+
+    <label class="boton-subir">
+      📄 Subir documento
+      <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" (change)="subirArchivo($event, 'documentos')" hidden>
+    </label>
+  </div>
+
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Nombre</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let archivo of archivos">
+        <td>{{ archivo.tipo }}</td>
+        <td>{{ archivo.nombre }}</td>
+        <td>{{ archivo.fecha_subida | date: 'short' }}</td>
+        <td>
+          <a [href]="archivo.link" target="_blank" class="boton-ver">🔗 Ver</a>
+          <button class="boton-eliminar" (click)="eliminarArchivo(archivo.id_archivo)">🗑️</button>
+          <button class="boton-permisos" (click)="abrirPermisos(archivo)">👥 Permisos</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- MODAL DE PERMISOS -->
+<div class="modal" *ngIf="modalPermisosVisible">
+  <div class="modal-permisos">
+
+    <h2 class="titulo">
+      Permisos de acceso
+    </h2>
+
+    <p class="archivo">
+      <strong>Archivo:</strong><br>
+      {{ archivoSeleccionado?.nombre }}
+    </p>
+
+    <p class="descripcion">
+      Selecciona los beneficiarios que podrán acceder a este archivo.
+    </p>
+
+    <div class="lista-beneficiarios">
+      <label
+        *ngFor="let b of beneficiarios"
+        class="beneficiario"
+      >
+        <input
+          type="checkbox"
+          [checked]="beneficiariosSeleccionados.includes(b.id_beneficiario)"
+          (change)="toggleBeneficiario(b.id_beneficiario)"
+        />
+        <span class="check-custom"></span>
+        <span class="nombre">{{ b.nombre_completo }}</span>
+      </label>
+    </div>
+
+    <div class="acciones">
+      <button class="btn guardar" (click)="guardarPermisos()">
+        💾 Guardar
+      </button>
+      <button class="btn cerrar" (click)="cerrarModal()">
+        ✖ Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>
+

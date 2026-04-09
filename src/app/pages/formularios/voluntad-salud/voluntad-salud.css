@@ -1,0 +1,75 @@
+.voluntad-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #f9fcfe;
+  padding: 25px 30px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  margin-top: 3%;
+  text-align: center;
+  color: #2a5d7c;
+  margin-bottom: 25px;
+}
+
+.section {
+  margin-bottom: 25px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid #3180ab;
+}
+
+.section h3 {
+  color: #3180ab;
+  margin-bottom: 10px;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-top: 10px;
+  color: #333;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.botones {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-guardar {
+  background-color: #3180ab;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-volver {
+  margin-left: 10px;
+  color: #3180ab;
+  text-decoration: none;
+  font-weight: bold;
+}

@@ -1,0 +1,48 @@
+<section class="admin-usuarios">
+  <h1>👥 Gestión de Usuarios</h1>
+
+  <table class="tabla-usuarios">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Estado</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td data-label="Nombre">{{ u.nombre }} {{ u.apellido }}</td>
+        <td data-label="Correo">{{ u.correo }}</td>
+        <td data-label="Teléfono">{{ u.telefono || '—' }}</td>
+        <td data-label="Estado">
+          <span [class.activo]="u.estado === 'Activo'" [class.inactivo]="u.estado !== 'Activo'">
+            {{ u.estado }}
+          </span>
+        </td>
+        <td data-label="Rol">
+          <select (change)="actualizarRol(u, $event)">
+            <option [value]="u.id_rol" selected>{{ u.nombre_rol }} (actual)</option>
+            <ng-container *ngFor="let r of roles">
+              <option *ngIf="r.nombre_rol !== u.nombre_rol" [value]="r.id_rol">
+                {{ r.nombre_rol }}
+              </option>
+            </ng-container>
+          </select>
+        </td>
+        <td data-label="Acciones">
+          <button class="btn-eliminar" (click)="eliminarUsuario(u.id_persona)">🗑️</button>
+          <!-- Liberar información (solo titular) -->
+          <button class="btn btn-warning" (click)="confirmarLiberacion(u)" title="Liberar información a beneficiarios">🔓</button>
+        </td>
+      </tr>
+
+      <!-- Mensaje cuando no hay usuarios -->
+      <tr *ngIf="usuarios.length === 0">
+        <td colspan="6" class="sin-datos">No hay usuarios registrados</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

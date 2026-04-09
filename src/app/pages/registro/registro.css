@@ -1,0 +1,195 @@
+/* === CONTENEDOR PRINCIPAL === */
+.registro {
+  background-color: #f9fafc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 50px 20px;
+}
+
+/* === TARJETA DEL FORMULARIO === */
+.registro-container {
+  margin-top: 5%;
+  background: #fff;
+  padding: 40px 50px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 850px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* === TITULOS === */
+h2 {
+  text-align: center;
+  color: #24495e;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #555;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+/* === GRID PRINCIPAL === */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* === CAMPOS DEL FORMULARIO === */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #24495e;
+  font-size: 0.95rem;
+}
+
+input,
+select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #3180ab;
+  box-shadow: 0 0 5px rgba(49, 128, 171, 0.3);
+}
+
+/* === BOTÓN === */
+button {
+  display: block;
+  width: 100%;
+  background: #3180ab;
+  color: white;
+  padding: 14px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  margin-top: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background: #24495e;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+  .registro-container {
+    padding: 35px 30px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  .subtitulo {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .registro {
+    padding: 30px 15px;
+  }
+
+  .registro-container {
+    padding: 25px 20px;
+    border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    font-size: 1rem;
+    padding: 12px;
+  }
+}
+
+/* === Contraseña === */
+.password-strength {
+  height: 6px;
+  border-radius: 3px;
+  margin-top: 5px;
+  transition: background-color 0.4s;
+}
+
+.password-strength.debil {
+  background-color: #e74c3c;
+  width: 33%;
+}
+.password-strength.media {
+  background-color: #f1c40f;
+  width: 66%;
+}
+.password-strength.fuerte {
+  background-color: #27ae60;
+  width: 100%;
+}
+
+.debil {
+  color: #e74c3c;
+}
+.media {
+  color: #f1c40f;
+}
+.fuerte {
+  color: #27ae60;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.success-text {
+  color: #27ae60;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.password-rules {
+  list-style: none;
+  padding-left: 0;
+  font-size: 0.85rem;
+}
+
+.password-rules li {
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.password-rules li.valid {
+  color: #27ae60;
+  font-weight: 600;
+}

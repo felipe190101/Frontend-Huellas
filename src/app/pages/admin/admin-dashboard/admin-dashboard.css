@@ -1,0 +1,27 @@
+.admin-panel {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.admin-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.admin-card {
+  background: white;
+  border: 2px solid #3180ab;
+  border-radius: 10px;
+  width: 300px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-card:hover {
+  background: #3180ab;
+  color: white;
+  transform: scale(1.05);
+}

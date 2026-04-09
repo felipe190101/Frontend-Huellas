@@ -1,0 +1,192 @@
+/* --- Estilos base --- */
+
+h2{
+    margin-top: 2%;
+    margin-bottom: 1%;
+}
+
+.tabla-planes {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tabla-planes th {
+  background: #3180ab;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.tabla-planes td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* --- Inputs y selects en celdas --- */
+.tabla-planes input,
+.tabla-planes select {
+  width: 95%;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+/* --- Botones --- */
+.tabla-planes button {
+  background: #3180ab;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-right: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tabla-planes button:hover {
+  background: #256b8b;
+}
+
+/* --- Responsive --- */
+@media screen and (max-width: 900px) {
+  h2 {
+    margin-top: 5%;
+    margin-bottom: 5%;
+  }
+
+  .tabla-planes thead {
+    display: none;
+  }
+
+  .tabla-planes,
+  .tabla-planes tbody,
+  .tabla-planes tr,
+  .tabla-planes td {
+    display: block;
+    width: 100%;
+  }
+
+  .tabla-planes tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fafafa;
+  }
+
+  .tabla-planes td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+  }
+
+  .tabla-planes td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #3180ab;
+  }
+
+  .tabla-planes input,
+  .tabla-planes select {
+    width: 60%;
+    font-size: 13px;
+    padding: 5px 6px;
+  }
+
+  .tabla-planes button {
+    padding: 6px 8px;
+    border-radius: 20px;
+  }
+}
+
+.agregar-plan-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  transition: 0.3s ease;
+}
+
+.agregar-plan-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Grillas mejor organizadas */
+.fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.fila-descripcion {
+  margin-top: 10px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group textarea {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background-color: #fff;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #3180ab;
+  outline: none;
+}
+
+/* 🔹 textarea más armónico */
+.full-width textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.acciones {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-agregar {
+  background-color: #3180ab;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-agregar:hover {
+  background-color: #26627f;
+}
+
