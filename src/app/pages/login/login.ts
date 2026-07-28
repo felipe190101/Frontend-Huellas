@@ -42,7 +42,7 @@ export class Login {
         if (rol === 'admin') {
           this.router.navigate(['/admin/usuarios']);
         } else {
-          this.router.navigate(['/perfil']);
+          this.router.navigate(['/archivos']);
         }
       });
 

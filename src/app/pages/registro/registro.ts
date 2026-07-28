@@ -2,14 +2,17 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 // IMPORTANTE: Importamos el environment
 import { environment } from '../../../environments/environment';
+import { LegalService } from '../../services/legal.service';
+import { TelefonoInternacional } from '../../shared/telefono-internacional/telefono-internacional';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink, TelefonoInternacional],
   templateUrl: './registro.html',
   styleUrls: ['./registro.css']
 })
@@ -23,13 +26,18 @@ export class Registro {
     tipo_documento: '',
     documento: '',
     correo: '',
-    telefono: '',
+    telefono_pais: 'CO',
+    telefono_codigo_pais: '+57',
+    telefono_nacional: '',
     direccion: '',
     fecha_nacimiento: '',
     contrasena: ''
   };
 
   confirmarContrasena = '';
+  aceptaTerminos = false;
+  versionTerminos = '';
+  cargandoTerminos = true;
   contrasenasCoinciden = true;
   nivelSeguridad = '';
   mensajeSeguridad = '';
@@ -48,7 +56,19 @@ export class Registro {
     longitudOk: false
   };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private legalService: LegalService) {}
+
+  async ngOnInit() {
+    try {
+      const terminos = await this.legalService.obtenerTerminos();
+      this.versionTerminos = terminos.version;
+    } catch (error) {
+      console.error('Error al consultar términos:', error);
+      Swal.fire('Error', 'No se pudieron cargar los términos vigentes. Inténtalo de nuevo más tarde.', 'error');
+    } finally {
+      this.cargandoTerminos = false;
+    }
+  }
 
   verificarFortaleza() {
     const contrasena = this.usuario.contrasena;
@@ -125,6 +145,11 @@ export class Registro {
       return;
     }
 
+    if (!this.aceptaTerminos || !this.versionTerminos) {
+      Swal.fire('Aceptación requerida', 'Debes aceptar los términos y condiciones vigentes para crear tu cuenta.', 'error');
+      return;
+    }
+
     try {
       // Reemplazamos la URL de localhost por la variable dinámica
       const respuesta = await fetch(this.apiUrl, {
@@ -132,7 +157,7 @@ export class Registro {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(this.usuario)
+        body: JSON.stringify({ ...this.usuario, acepta_terminos: true, version_terminos: this.versionTerminos })
       });
 
       const data = await respuesta.json();
@@ -155,12 +180,15 @@ export class Registro {
           tipo_documento: '',
           documento: '',
           correo: '',
-          telefono: '',
+          telefono_pais: 'CO',
+          telefono_codigo_pais: '+57',
+          telefono_nacional: '',
           direccion: '',
           fecha_nacimiento: '',
           contrasena: ''
         };
         this.confirmarContrasena = '';
+        this.aceptaTerminos = false;
         this.nivelSeguridad = '';
         this.mensajeSeguridad = '';
       } else {

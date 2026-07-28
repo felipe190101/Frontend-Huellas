@@ -193,3 +193,19 @@ button:disabled {
   color: #27ae60;
   font-weight: 600;
 }
+.aceptacion-terminos {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.aceptacion-terminos input[type='checkbox'],
+.aceptacion-legal-perfil input[type='checkbox'] {
+  width: auto;
+  margin-top: 4px;
+}
+
+.aceptacion-terminos label { margin: 0; font-weight: 400; }
+.aceptacion-terminos a, .aceptacion-legal-perfil a { color: #3180ab; }

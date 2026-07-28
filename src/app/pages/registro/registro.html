@@ -23,6 +23,7 @@
             <option value="CC">Cédula de ciudadanía</option>
             <option value="CE">Cédula de extranjería</option>
             <option value="TI">Tarjeta de identidad</option>
+            <option value="OT">Otros</option>
           </select>
         </div>
 
@@ -38,7 +39,7 @@
 
         <div class="form-group">
           <label>Teléfono</label>
-          <input type="text" name="telefono" [(ngModel)]="usuario.telefono" />
+          <app-telefono-internacional [(pais)]="usuario.telefono_pais" [(codigoPais)]="usuario.telefono_codigo_pais" [(nacional)]="usuario.telefono_nacional" />
         </div>
 
         <div class="form-group">
@@ -90,7 +91,15 @@
           <li [class.valid]="cumpleRequisitos.tieneEspecial">Un carácter especial</li>
         </ul>
       </div>
-      <button type="submit" [disabled]="!registroForm.valid">Registrarme</button>
+      <div class="aceptacion-terminos">
+        <input type="checkbox" id="acepta-terminos" name="aceptaTerminos" [(ngModel)]="aceptaTerminos" required />
+        <label for="acepta-terminos">
+          He leído y acepto los <a routerLink="/terminos-y-condiciones" target="_blank">términos y condiciones</a>
+          y la <a routerLink="/politica-de-privacidad" target="_blank">política de privacidad</a>.
+        </label>
+      </div>
+      <p class="error-text" *ngIf="!cargandoTerminos && !versionTerminos">No fue posible verificar la versión vigente de los términos.</p>
+      <button type="submit" [disabled]="!registroForm.valid || cargandoTerminos || !versionTerminos">Registrarme</button>
     </form>
   </div>
 </section>

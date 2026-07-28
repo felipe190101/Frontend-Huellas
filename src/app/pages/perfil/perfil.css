@@ -219,3 +219,15 @@ button:hover {
   }
 }
 
+.aceptacion-legal-perfil {
+  margin: 20px 0 28px;
+  padding: 20px;
+  border-left: 4px solid #3180ab;
+  border-radius: 8px;
+  background: #edf5f8;
+}
+
+.aceptacion-legal-perfil h3 { margin-bottom: 8px; }
+.aceptacion-legal-perfil p { margin-bottom: 12px; }
+.aceptacion-legal-perfil label { display: block; margin-bottom: 14px; }
+.aceptacion-legal-perfil input[type='checkbox'] { width: auto; margin-right: 8px; }

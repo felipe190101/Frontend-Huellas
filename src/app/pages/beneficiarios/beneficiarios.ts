@@ -4,11 +4,12 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 // IMPORTANTE: Importamos el environment
 import { environment } from '../../../environments/environment';
+import { TelefonoInternacional } from '../../shared/telefono-internacional/telefono-internacional';
 
 @Component({
   selector: 'app-beneficiarios',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [NgFor, NgIf, FormsModule, TelefonoInternacional],
   templateUrl: './beneficiarios.html',
   styleUrls: ['./beneficiarios.css']
 })
@@ -18,10 +19,13 @@ export class Beneficiarios implements OnInit {
     id_beneficiario: null,
     nombre: '',
     apellido: '',
+    correo: '',
     tipo_documento: '',
     documento: '',
-    correo: '',
-    telefono: '',
+    telefono_pais: '',
+    telefono_codigo_pais: '',
+    telefono_nacional: '',
+    telefono_e164: '',
     relacion: ''
   };
   modoEdicion = false;
@@ -40,7 +44,11 @@ export class Beneficiarios implements OnInit {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (!resp.ok) throw new Error('Error al obtener beneficiarios');
-      this.beneficiarios = await resp.json();
+      const data = await resp.json();
+      this.beneficiarios = (Array.isArray(data) ? data : []).map((beneficiario: any) => ({
+        ...beneficiario,
+        telefono_e164: beneficiario.telefono_e164 || this.formatearTelefono(beneficiario)
+      }));
     } catch (error) {
       console.error(error);
       Swal.fire('Error', 'No se pudieron cargar los beneficiarios', 'error');
@@ -51,8 +59,21 @@ export class Beneficiarios implements OnInit {
 
   abrirFormulario(beneficiario?: any) {
     this.modoEdicion = !!beneficiario;
+    const nombreCompleto = String(beneficiario?.nombre_completo || '').trim();
+    const partesNombre = nombreCompleto.split(/\s+/).filter(Boolean);
+    const nombreDesdeCompleto = partesNombre.length > 1 ? partesNombre.slice(0, -1).join(' ') : nombreCompleto;
+    const apellidoDesdeCompleto = partesNombre.length > 1 ? partesNombre.slice(-1).join(' ') : '';
+
     this.beneficiario = beneficiario
-      ? { ...beneficiario }
+      ? {
+          ...beneficiario,
+          nombre: beneficiario.nombre || nombreDesdeCompleto,
+          apellido: beneficiario.apellido || apellidoDesdeCompleto,
+          telefono_e164: beneficiario.telefono_e164 || '',
+          telefono_pais: beneficiario.telefono_pais || 'CO',
+          telefono_codigo_pais: beneficiario.telefono_codigo_pais || '+57',
+          telefono_nacional: beneficiario.telefono_nacional || ''
+        }
       : {
           id_beneficiario: null,
           nombre: '',
@@ -60,7 +81,10 @@ export class Beneficiarios implements OnInit {
           tipo_documento: '',
           documento: '',
           correo: '',
-          telefono: '',
+          telefono_e164: '',
+          telefono_pais: 'CO',
+          telefono_codigo_pais: '+57',
+          telefono_nacional: '',
           relacion: ''
         };
     this.mostrarModal = true;
@@ -68,6 +92,20 @@ export class Beneficiarios implements OnInit {
 
   cerrarModal() {
     this.mostrarModal = false;
+  }
+
+  formatearTelefono(beneficiario: any): string {
+    if (beneficiario?.telefono_e164) return beneficiario.telefono_e164;
+    if (beneficiario?.telefono_codigo_pais && beneficiario?.telefono_nacional) {
+      return `${beneficiario.telefono_codigo_pais} ${beneficiario.telefono_nacional}`;
+    }
+    if (beneficiario?.telefono) return beneficiario.telefono;
+    return '—';
+  }
+
+  private datosBeneficiario() {
+    const { telefono_e164, ...datos } = this.beneficiario as any;
+    return datos;
   }
 
   async guardarBeneficiario() {
@@ -86,10 +124,20 @@ export class Beneficiarios implements OnInit {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(this.beneficiario)
+        body: JSON.stringify(this.datosBeneficiario())
       });
-      if (!resp.ok) throw new Error('Error al crear beneficiario');
-      Swal.fire('✅ Éxito', 'Beneficiario agregado correctamente', 'success');
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || data.mensaje || 'Error al crear beneficiario');
+
+      const correoEnviado = data?.notificacionCorreo?.enviado === true;
+      const correoNoDisponible = data?.notificacionCorreo?.motivo === 'sin_correo';
+      const mensajeCorreo = correoEnviado
+        ? 'Además, se le envió un correo electrónico al beneficiario.'
+        : correoNoDisponible
+          ? 'El beneficiario no tiene correo registrado, así que no se pudo enviar la notificación.'
+          : 'No se pudo confirmar el envío del correo al beneficiario.';
+
+      Swal.fire('✅ Éxito', `Beneficiario agregado correctamente. ${mensajeCorreo}`, 'success');
       await this.obtenerBeneficiarios();
     } catch (error) {
       console.error(error);
@@ -107,7 +155,7 @@ export class Beneficiarios implements OnInit {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(this.beneficiario)
+        body: JSON.stringify(this.datosBeneficiario())
       });
       if (!resp.ok) throw new Error('Error al actualizar beneficiario');
       Swal.fire('✅ Éxito', 'Beneficiario actualizado correctamente', 'success');

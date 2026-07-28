@@ -21,7 +21,7 @@
         <td>{{ b.tipo_documento }}</td>
         <td>{{ b.documento }}</td>
         <td>{{ b.correo }}</td>
-        <td>{{ b.telefono }}</td>
+        <td>{{ formatearTelefono(b) }}</td>
         <td>{{ b.relacion }}</td>
         <td>
           <button class="btn-editar" (click)="abrirFormulario(b)">✏️</button>
@@ -58,6 +58,7 @@
             <option value="TI">Tarjeta de identidad</option>
             <option value="CE">Cédula de extranjería</option>
             <option value="PAS">Pasaporte</option>
+            <option value="OT">Otros</option>
             </select>
         </div>
 
@@ -73,7 +74,12 @@
 
         <div class="form-group">
             <label>Teléfono</label>
-            <input type="text" [(ngModel)]="beneficiario.telefono" name="telefono" />
+            <app-telefono-internacional
+              [(pais)]="beneficiario.telefono_pais"
+              [(codigoPais)]="beneficiario.telefono_codigo_pais"
+              [(nacional)]="beneficiario.telefono_nacional"
+              [telefonoE164]="beneficiario.telefono_e164"
+            />
         </div>
 
         <div class="form-group">

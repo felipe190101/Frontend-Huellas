@@ -1,0 +1,53 @@
+<section class="admin-auditoria">
+  <div class="encabezado">
+    <div>
+      <h1>Historial de acciones</h1>
+      <p>Registro de las acciones realizadas en la plataforma.</p>
+    </div>
+    <button type="button" (click)="obtenerRegistros()" [disabled]="cargando">
+      {{ cargando ? 'Actualizando...' : 'Actualizar' }}
+    </button>
+  </div>
+
+  <p class="resumen" *ngIf="!cargando && !error">{{ total }} registro(s) en total</p>
+  <p class="estado" *ngIf="cargando">Cargando registros de auditoría...</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+
+  <div class="tabla-contenedor" *ngIf="!cargando && !error">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Acción</th>
+          <th>Ruta afectada</th>
+          <th>Estado HTTP</th>
+          <th>Dirección IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let registro of registros">
+          <td data-label="Fecha">{{ registro.fecha_creacion ? (registro.fecha_creacion | date:'dd/MM/yyyy, HH:mm:ss') : '—' }}</td>
+          <td data-label="Usuario">{{ registro.nombre_usuario || '—' }}</td>
+          <td data-label="Correo">{{ registro.correo_usuario || '—' }}</td>
+          <td data-label="Rol">{{ registro.rol || '—' }}</td>
+          <td data-label="Acción"><span class="accion">{{ registro.accion || '—' }}</span></td>
+          <td data-label="Ruta afectada" class="ruta">{{ registro.ruta || '—' }}</td>
+          <td data-label="Estado HTTP"><span class="estado-http">{{ registro.estado_http ?? '—' }}</span></td>
+          <td data-label="Dirección IP">{{ registro.direccion_ip || '—' }}</td>
+        </tr>
+        <tr *ngIf="registros.length === 0">
+          <td colspan="8" class="sin-registros">No hay registros de auditoría para mostrar.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nav class="paginacion" *ngIf="!cargando && !error && totalPaginas > 1" aria-label="Paginación de auditoría">
+    <button type="button" (click)="cambiarPagina(pagina - 1)" [disabled]="pagina === 1">Anterior</button>
+    <span>Página {{ pagina }} de {{ totalPaginas }}</span>
+    <button type="button" (click)="cambiarPagina(pagina + 1)" [disabled]="pagina === totalPaginas">Siguiente</button>
+  </nav>
+</section>

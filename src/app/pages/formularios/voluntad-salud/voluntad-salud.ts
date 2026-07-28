@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
-// IMPORTANTE: Importamos el environment
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -12,7 +11,6 @@ import { environment } from '../../../../environments/environment';
   styleUrls: ['./voluntad-salud.css']
 })
 export class VoluntadSalud {
-  // Definimos la base de la URL usando el environment
   private baseUrl = environment.apiUrl;
 
   formulario = {
@@ -36,9 +34,22 @@ export class VoluntadSalud {
     creencias_religiosas: ''
   };
 
+  tieneContenido(): boolean {
+    return Object.values(this.formulario).some((valor) => String(valor || '').trim().length > 0);
+  }
+
   async enviarFormulario() {
+    if (!this.tieneContenido()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario vacío',
+        text: 'Debes completar al menos un campo antes de guardar la voluntad de salud.',
+        confirmButtonColor: '#3180ab'
+      });
+      return;
+    }
+
     try {
-      // 🌀 Mostrar loader mientras guarda
       Swal.fire({
         title: 'Guardando formulario...',
         text: 'Por favor espera mientras se genera y guarda tu voluntad.',
@@ -50,13 +61,16 @@ export class VoluntadSalud {
 
       const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
 
+      const datosLimpios = Object.fromEntries(
+        Object.entries(this.formulario).map(([clave, valor]) => [clave, String(valor || '').trim()])
+      );
+
       const body = {
         nombre: `${usuario.nombre} ${usuario.apellido}`,
         tipo: 'salud',
-        datos: this.formulario
+        datos: datosLimpios
       };
 
-      // Reemplazamos localhost por la variable dinámica
       const resp = await fetch(`${this.baseUrl}/voluntades/guardar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -66,7 +80,7 @@ export class VoluntadSalud {
       Swal.close();
 
       if (!resp.ok) throw new Error('Error al enviar formulario');
-      
+
       Swal.fire({
         icon: 'success',
         title: 'Formulario guardado correctamente',

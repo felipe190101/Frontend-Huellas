@@ -3,14 +3,16 @@ import Swal from 'sweetalert2';
 import { UsuarioService } from '../../services/usuario.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 // IMPORTANTE: Importamos el environment
 import { environment } from '../../../environments/environment';
+import { LegalService } from '../../services/legal.service';
+import { TelefonoInternacional } from '../../shared/telefono-internacional/telefono-internacional';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink, TelefonoInternacional],
   templateUrl: './perfil.html',
   styleUrls: ['./perfil.css'],
 })
@@ -22,16 +24,49 @@ export class Perfil implements OnInit {
   suscripcion: any = null;
   saludSubido = false;
   muerteSubido = false;
+  aceptaTerminosPendiente = false;
+  versionTerminos = '';
+  cargandoTerminos = false;
 
-  constructor(private usuarioService: UsuarioService, private router: Router) {}
+  constructor(private usuarioService: UsuarioService, private router: Router, private legalService: LegalService) {}
 
   async ngOnInit() {
     try {
       const data = await this.usuarioService.obtenerPerfil();
       this.usuario = data.usuario;
+      this.usuario.telefono_pais = this.usuario.telefono_pais || 'CO';
+      this.usuario.telefono_codigo_pais = this.usuario.telefono_codigo_pais || '+57';
+      this.usuario.telefono_nacional = this.usuario.telefono_nacional || '';
       this.suscripcion = data.suscripcion;
+      if (!this.usuario.acepta_terminos) await this.cargarTerminosVigentes();
     } catch (error: any) {
       Swal.fire('Error', error.message, 'error');
+    }
+  }
+
+  async cargarTerminosVigentes() {
+    this.cargandoTerminos = true;
+    try {
+      const terminos = await this.legalService.obtenerTerminos();
+      this.versionTerminos = terminos.version;
+    } catch (error: any) {
+      Swal.fire('Error', error.message || 'No se pudieron cargar los términos vigentes.', 'error');
+    } finally {
+      this.cargandoTerminos = false;
+    }
+  }
+
+  async aceptarTerminos() {
+    if (!this.aceptaTerminosPendiente || !this.versionTerminos) return;
+    try {
+      await this.legalService.aceptarTerminos(this.versionTerminos);
+      this.usuario.acepta_terminos = true;
+      this.usuario.version_terminos = this.versionTerminos;
+      this.usuario.fecha_aceptacion_terminos = new Date().toISOString();
+      this.aceptaTerminosPendiente = false;
+      Swal.fire('Éxito', 'La aceptación de los términos fue registrada correctamente.', 'success');
+    } catch (error: any) {
+      Swal.fire('Error', error.message || 'No fue posible registrar la aceptación.', 'error');
     }
   }
 

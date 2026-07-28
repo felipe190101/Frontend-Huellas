@@ -125,7 +125,7 @@ h2 {
 }
 
 .btn-cancelar:hover {
-  background: #ccc;
+  background: #ff0000;
 }
 
 @keyframes fadeIn {

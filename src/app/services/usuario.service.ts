@@ -22,13 +22,14 @@ export class UsuarioService {
 
   async actualizarPerfil(datos: any) {
     const token = localStorage.getItem('token');
+    const { telefono, telefono_e164, ...datosActualizados } = datos;
     const res = await fetch(`${this.apiUrl}/perfil`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify(datos),
+      body: JSON.stringify(datosActualizados),
     });
 
     if (!res.ok) {

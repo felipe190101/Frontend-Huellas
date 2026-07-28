@@ -16,7 +16,7 @@
       <tr *ngFor="let u of usuarios">
         <td data-label="Nombre">{{ u.nombre }} {{ u.apellido }}</td>
         <td data-label="Correo">{{ u.correo }}</td>
-        <td data-label="Teléfono">{{ u.telefono || '—' }}</td>
+        <td data-label="Teléfono">{{ u.telefono_e164 || u.telefono || '—' }}</td>
         <td data-label="Estado">
           <span [class.activo]="u.estado === 'Activo'" [class.inactivo]="u.estado !== 'Activo'">
             {{ u.estado }}

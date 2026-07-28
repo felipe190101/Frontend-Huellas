@@ -21,6 +21,7 @@
 
         <a routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
         <a routerLink="/admin/planes" routerLinkActive="active">Planes</a>
+        <a routerLink="/admin/auditoria" routerLinkActive="active">Auditoría</a>
 
         <button (click)="logout()">Cerrar sesión</button>
       </ng-container>
@@ -28,10 +29,10 @@
       <ng-template #usuarioNormal>
         <ng-container *ngIf="autenticado && usuario?.nombre_rol !== 'admin'; else sinSesion">
           <span class="usuario">👋 Bienvenido &nbsp;{{ usuario?.nombre }} {{ usuario?.apellido }}</span>
-          <a routerLink="/perfil" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Mi perfil</a>
+          <a routerLink="/archivos" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">📂 Mis Archivos</a>
           <a routerLink="/planes" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Planes</a>
           <a routerLink="/beneficiarios" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Beneficiarios</a>
-          <a routerLink="/archivos" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">📂 Mis Archivos</a>
+          <a routerLink="/perfil" routerLinkActive="active" (click)="closeMenu()" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Mi perfil</a>
           <button (click)="logout()">Cerrar sesión</button>
         </ng-container>
       </ng-template>

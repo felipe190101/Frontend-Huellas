@@ -1,6 +1,19 @@
 <div class="perfil-container">
   <h2>Mi Perfil</h2>
 
+  <section class="aceptacion-legal-perfil" *ngIf="!usuario.acepta_terminos">
+    <h3>Actualización de términos requerida</h3>
+    <p>Para continuar usando la plataforma debes aceptar los términos y condiciones vigentes.</p>
+    <label>
+      <input type="checkbox" [(ngModel)]="aceptaTerminosPendiente" name="aceptaTerminosPendiente" />
+      Acepto los <a routerLink="/terminos-y-condiciones" target="_blank">términos y condiciones</a> y la
+      <a routerLink="/politica-de-privacidad" target="_blank">política de privacidad</a>.
+    </label>
+    <button type="button" (click)="aceptarTerminos()" [disabled]="!aceptaTerminosPendiente || !versionTerminos || cargandoTerminos">
+      {{ cargandoTerminos ? 'Cargando...' : 'Aceptar términos' }}
+    </button>
+  </section>
+
   <div class="perfil-grid">
     <!-- 🔹 Columna izquierda: Datos del usuario -->
     <div class="perfil-info">
@@ -23,7 +36,12 @@
 
         <div class="form-group">
           <label>Teléfono</label>
-          <input type="text" [(ngModel)]="usuario.telefono" name="telefono" />
+          <app-telefono-internacional
+            [(pais)]="usuario.telefono_pais"
+            [(codigoPais)]="usuario.telefono_codigo_pais"
+            [(nacional)]="usuario.telefono_nacional"
+            [telefonoE164]="usuario.telefono_e164"
+          />
         </div>
 
         <div class="form-group">
