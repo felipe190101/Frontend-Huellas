@@ -6,11 +6,16 @@
       <p>“Tu historia trasciende, tu legado vive”</p>
     </div>
 
+    <div class="tipo-acceso" role="group" aria-label="Tipo de acceso">
+      <button type="button" [class.activo]="tipoAcceso === 'titular'" (click)="cambiarTipoAcceso('titular')">Titular o administrador</button>
+      <button type="button" [class.activo]="tipoAcceso === 'beneficiario'" (click)="cambiarTipoAcceso('beneficiario')">Beneficiario</button>
+    </div>
+
     <form (ngSubmit)="iniciarSesion()">
       <div class="form-group">
-        <label for="correo">Correo electrónico</label>
+        <label for="correo">{{ tipoAcceso === 'beneficiario' ? 'Nombre de usuario' : 'Correo electrónico' }}</label>
         <input
-          type="email"
+          [type]="tipoAcceso === 'beneficiario' ? 'text' : 'email'"
           id="correo"
           name="correo"
           [(ngModel)]="credenciales.correo"
@@ -20,20 +25,19 @@
 
       <div class="form-group">
         <label for="contrasena">Contraseña</label>
-        <input
-          type="password"
-          id="contrasena"
-          name="contrasena"
-          [(ngModel)]="credenciales.contrasena"
-          required
-        />
+        <input type="password" id="contrasena" name="contrasena" [(ngModel)]="credenciales.contrasena" required />
       </div>
 
       <button type="submit" class="btn-login">Iniciar sesión</button>
     </form>
 
+    <div class="extra-links" *ngIf="tipoAcceso === 'beneficiario'">
+      <p>¿Aún no tienes contraseña?</p>
+      <span>Usa el enlace de activación enviado a tu correo.</span>
+    </div>
+
     <div class="extra-links">
-      <p>¿No tienes una cuenta?</p>
+      <p>¿Deseas crear tu cuenta como titular de Huellas & Legados?</p>
       <a (click)="irARegistro()">Regístrate aquí</a>
     </div>
   </div>

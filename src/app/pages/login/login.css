@@ -51,6 +51,29 @@
   margin-bottom: 20px;
 }
 
+.tipo-acceso {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 0 24px;
+}
+
+.tipo-acceso button {
+  border: 1px solid #b8d2e2;
+  background: #f5f9fc;
+  color: #1e4b67;
+  border-radius: 10px;
+  padding: 10px 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tipo-acceso button.activo {
+  background: #3180ab;
+  border-color: #3180ab;
+  color: #fff;
+}
+
 label {
   display: block;
   font-weight: 600;

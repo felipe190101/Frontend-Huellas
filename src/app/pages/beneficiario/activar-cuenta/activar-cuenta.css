@@ -1,0 +1,15 @@
+.cuenta-contenedor { min-height: calc(100vh - 80px); display: grid; place-items: center; background: #f5f9fc; padding: 24px; }
+.cuenta-tarjeta { width: min(100%, 460px); background: #fff; border-radius: 18px; padding: 32px; box-shadow: 0 8px 30px rgba(0,0,0,.1); }
+h1 { color: #1e4b67; margin-top: 0; } form { display: grid; gap: 10px; margin-top: 24px; } input { padding: 12px; border: 1px solid #b8d2e2; border-radius: 10px; } button { margin-top: 12px; padding: 12px; border: 0; border-radius: 10px; color: #fff; background: #3180ab; cursor: pointer; font-weight: 700; }
+.password-strength { height: 6px; border-radius: 99px; background: #e3ebf0; overflow: hidden; }
+.password-strength::after { content: ''; display: block; height: 100%; transition: width .2s ease; }
+.password-strength.debil::after { width: 33%; background: #dc3545; }
+.password-strength.media::after { width: 66%; background: #e6a700; }
+.password-strength.fuerte::after { width: 100%; background: #198754; }
+.nivel { margin: -4px 0 2px; font-size: .9rem; }
+.nivel.debil, .error-text { color: #b42318; }
+.nivel.media { color: #9a6700; }
+.nivel.fuerte, .success-text { color: #177245; }
+.password-rules { margin: 4px 0 0; padding-left: 20px; color: #667085; font-size: .9rem; }
+.password-rules li { margin: 4px 0; }
+.password-rules li.valid { color: #177245; }

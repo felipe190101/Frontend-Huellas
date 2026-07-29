@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.css']
 })
 export class Login {
+  tipoAcceso: 'titular' | 'beneficiario' = 'titular';
   credenciales = {
     correo: '',
     contrasena: ''
@@ -22,15 +23,18 @@ export class Login {
 
   async iniciarSesion() {
     try {
-      const response = await this.auth.login(this.credenciales.correo, this.credenciales.contrasena);
+      const response = this.tipoAcceso === 'beneficiario'
+        ? await this.auth.loginBeneficiario(this.credenciales.correo, this.credenciales.contrasena)
+        : await this.auth.login(this.credenciales.correo, this.credenciales.contrasena);
 
       // ✅ Guardar usuario y token en localStorage
       localStorage.setItem('token', response.token);
-      localStorage.setItem('usuario', JSON.stringify(response.usuario));
+      const usuario = response.usuario || response.beneficiario;
+      localStorage.setItem('usuario', JSON.stringify(usuario));
 
       // ✅ Obtener nombre y rol
-      const nombre = response.usuario.nombre;
-      const rol = response.usuario.nombre_rol;
+      const nombre = usuario.nombre;
+      const rol = usuario.nombre_rol || usuario.rol;
 
       Swal.fire({
         icon: 'success',
@@ -41,6 +45,8 @@ export class Login {
         // ✅ Redirigir según rol
         if (rol === 'admin') {
           this.router.navigate(['/admin/usuarios']);
+        } else if (rol === 'beneficiario') {
+          this.router.navigate(['/beneficiario']);
         } else {
           this.router.navigate(['/archivos']);
         }
@@ -58,5 +64,11 @@ export class Login {
 
   irARegistro() {
     this.router.navigate(['/registro']);
+  }
+
+  cambiarTipoAcceso(tipo: 'titular' | 'beneficiario') {
+    this.tipoAcceso = tipo;
+    this.credenciales.correo = '';
+    this.credenciales.contrasena = '';
   }
 }

@@ -2,22 +2,52 @@
   <h2>📂 Mis Archivos</h2>
 
   <div class="acciones">
-    <label class="boton-subir">
-      📸 Subir imagen
-      <input type="file" accept="image/*" (change)="subirArchivo($event, 'imagenes')" hidden>
-    </label>
+    <div class="menu-accion">
+      <button type="button" class="boton-menu" (click)="alternarSubmenu('imagen')">
+        📸 Imagen
+      </button>
+      <div class="submenu" [class.abierto]="submenuActivo === 'imagen'">
+        <button type="button" class="submenu-opcion" (click)="iniciarFoto()">
+          Tomar imagen
+        </button>
+        <button type="button" class="submenu-opcion" (click)="abrirSelector(inputImagen)">
+          Subir imagen
+        </button>
+        <input #inputImagen type="file" accept="image/*" (change)="subirImagenDesdeMenu($event)" hidden>
+      </div>
+    </div>
 
-    <label class="boton-subir">
-      🎵 Subir audio
-      <input type="file" accept="audio/*" (change)="subirArchivo($event, 'audios')" hidden>
-    </label>
+    <div class="menu-accion">
+      <button type="button" class="boton-menu" (click)="alternarSubmenu('audio')">
+        🎵 Audio
+      </button>
+      <div class="submenu" [class.abierto]="submenuActivo === 'audio'">
+        <button type="button" class="submenu-opcion" (click)="alternarAudio()">
+          Grabar audio
+        </button>
+        <button type="button" class="submenu-opcion" (click)="abrirSelector(inputAudio)">
+          Subir audio
+        </button>
+        <input #inputAudio type="file" accept="audio/*" (change)="subirAudioDesdeMenu($event)" hidden>
+      </div>
+    </div>
 
-    <label class="boton-subir">
-      🎬 Subir video
-      <input type="file" accept="video/*" (change)="subirArchivo($event, 'videos')" hidden>
-    </label>
+    <div class="menu-accion">
+      <button type="button" class="boton-menu" (click)="alternarSubmenu('video')">
+        🎬 Video
+      </button>
+      <div class="submenu" [class.abierto]="submenuActivo === 'video'">
+        <button type="button" class="submenu-opcion" (click)="alternarVideo()">
+          Grabar video
+        </button>
+        <button type="button" class="submenu-opcion" (click)="abrirSelector(inputVideo)">
+          Subir video
+        </button>
+        <input #inputVideo type="file" accept="video/*" (change)="subirVideoDesdeMenu($event)" hidden>
+      </div>
+    </div>
 
-    <label class="boton-subir">
+    <label class="boton-menu boton-documento">
       📄 Subir documento
       <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" (change)="subirArchivo($event, 'documentos')" hidden>
     </label>
@@ -45,6 +75,60 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<div class="modal-captura" *ngIf="mediaModalVisible">
+  <div class="modal-captura__contenido">
+    <h2>{{ tituloCaptura }}</h2>
+    <p>{{ mensajeCaptura }}</p>
+
+    <video
+      *ngIf="modoCaptura !== 'audio'"
+      #vistaMedia
+      class="vista-media"
+      autoplay
+      playsinline
+      muted
+    ></video>
+
+    <div class="estado-captura" *ngIf="modoCaptura === 'audio'">
+      <span class="punto" [class.grabando]="grabando"></span>
+      <span>{{ grabando ? 'Grabando audio...' : 'Audio listo para grabar' }}</span>
+    </div>
+
+    <div class="acciones-captura">
+      <button
+        type="button"
+        class="btn principal"
+        *ngIf="modoCaptura === 'foto'"
+        (click)="capturarFoto()"
+      >
+        📸 Capturar foto
+      </button>
+
+      <button
+        type="button"
+        class="btn principal"
+        *ngIf="modoCaptura === 'audio'"
+        (click)="alternarAudio()"
+      >
+        {{ grabando ? '⏹️ Detener y guardar' : '▶️ Iniciar grabación' }}
+      </button>
+
+      <button
+        type="button"
+        class="btn principal"
+        *ngIf="modoCaptura === 'video'"
+        (click)="alternarVideo()"
+      >
+        {{ grabando ? '⏹️ Detener y guardar' : '▶️ Iniciar grabación' }}
+      </button>
+
+      <button type="button" class="btn secundario" (click)="cerrarCaptura(true)">
+        Cancelar
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL DE PERMISOS -->
@@ -90,4 +174,3 @@
 
   </div>
 </div>
-

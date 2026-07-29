@@ -16,6 +16,8 @@ import { Archivos } from './pages/archivos/archivos';
 import { AdminAuditoria } from './pages/admin/admin-auditoria/admin-auditoria';
 import { TerminosCondiciones } from './pages/legal/terminos-condiciones/terminos-condiciones';
 import { PoliticaPrivacidad } from './pages/legal/politica-privacidad/politica-privacidad';
+import { ActivarCuentaBeneficiario } from './pages/beneficiario/activar-cuenta/activar-cuenta';
+import { PortalBeneficiario } from './pages/beneficiario/portal/portal-beneficiario';
 
 export const routes: Routes = [
   { path: '', component: Home },        // Home por defecto
@@ -26,6 +28,8 @@ export const routes: Routes = [
   { path: 'politica-de-privacidad', component: PoliticaPrivacidad },
   { path: 'registro', component: Registro },
   { path: 'login', component: Login },
+  { path: 'beneficiario/activar', component: ActivarCuentaBeneficiario },
+  { path: 'beneficiario', component: PortalBeneficiario },
   { path: 'perfil', component: Perfil },
   { path: 'admin/usuarios', component: AdminUsuarios, canActivate: [AdminGuard] },
   { path: 'admin/planes', component: AdminPlanes, canActivate: [AdminGuard] },

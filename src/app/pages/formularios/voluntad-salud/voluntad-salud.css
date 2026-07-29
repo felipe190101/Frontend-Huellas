@@ -67,9 +67,28 @@ input, select, textarea {
   cursor: pointer;
 }
 
+.btn-guardar:hover:not(:disabled) {
+  background-color: #276c8d;
+}
+
+.btn-guardar:disabled {
+  background-color: #b9c3cc;
+  color: #6f7b86;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+
 .btn-volver {
   margin-left: 10px;
+  background: #ffffff;
   color: #3180ab;
+  border: 1px solid #3180ab;
   text-decoration: none;
   font-weight: bold;
+}
+
+.btn-volver:hover {
+  background: #eef6fb;
 }

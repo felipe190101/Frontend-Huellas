@@ -86,7 +86,7 @@
 
     <div class="botones">
       <button type="submit" class="btn-guardar" [disabled]="!tieneContenido()">💾 Guardar</button>
-      <a routerLink="/perfil" class="btn-volver">⬅️ Volver</a>
+      <button type="button" class="btn-volver" (click)="volverPerfil()">⬅️ Volver</button>
     </div>
   </form>
 </div>

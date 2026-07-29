@@ -1,0 +1,11 @@
+<main class="portal">
+  <p *ngIf="cargando">Cargando información...</p>
+  <section *ngIf="perfil" class="tarjeta">
+    <h1>Portal del beneficiario</h1>
+    <h2>Bienvenido, {{ perfil.nombre }} {{ perfil.apellido }}</h2>
+    <p><strong>Usuario:</strong> {{ perfil.nombre_usuario }}</p>
+    <p><strong>Relación:</strong> {{ perfil.relacion }}</p>
+    <p><strong>Correo:</strong> {{ perfil.correo || 'No registrado' }}</p>
+    <p class="ayuda">Aquí se incorporarán las funcionalidades y contenidos autorizados para ti.</p>
+  </section>
+</main>

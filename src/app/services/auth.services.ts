@@ -25,6 +25,37 @@ export class AuthService {
     return data;
   }
 
+  async loginBeneficiario(nombre_usuario: string, contrasena: string) {
+    const res = await fetch(`${environment.apiUrl}/cuenta-beneficiario/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre_usuario, contrasena }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'No fue posible iniciar sesión');
+    return data;
+  }
+
+  async activarCuentaBeneficiario(token: string, contrasena: string) {
+    const res = await fetch(`${environment.apiUrl}/cuenta-beneficiario/activar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, contrasena }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'No fue posible activar la cuenta');
+    return data;
+  }
+
+  async obtenerPerfilBeneficiario() {
+    const res = await fetch(`${environment.apiUrl}/cuenta-beneficiario/perfil`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'No fue posible obtener el perfil');
+    return data;
+  }
+
   getUsuario() {
     if (!this.usuarioActual) {
       const user = localStorage.getItem('usuario');

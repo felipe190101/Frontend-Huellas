@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -34,8 +35,14 @@ export class VoluntadSalud {
     creencias_religiosas: ''
   };
 
+  constructor(private router: Router) {}
+
   tieneContenido(): boolean {
     return Object.values(this.formulario).some((valor) => String(valor || '').trim().length > 0);
+  }
+
+  volverPerfil(): void {
+    this.router.navigate(['/perfil']);
   }
 
   async enviarFormulario() {
@@ -87,7 +94,7 @@ export class VoluntadSalud {
         text: 'Tu voluntad de salud se ha almacenado exitosamente en Drive.',
         confirmButtonColor: '#3180ab'
       }).then(() => {
-        window.location.href = '/perfil';
+        this.volverPerfil();
       });
     } catch (error) {
       Swal.close();

@@ -1,0 +1,25 @@
+<main class="cuenta-contenedor">
+  <section class="cuenta-tarjeta">
+    <h1>Activa tu cuenta de beneficiario</h1>
+    <p>Define una contraseña segura para ingresar a tu portal.</p>
+    <form (ngSubmit)="activar()">
+      <label for="contrasena">Contraseña</label>
+      <input id="contrasena" name="contrasena" type="password" [(ngModel)]="contrasena" (input)="verificarFortaleza()" required />
+      <div class="password-strength" [ngClass]="nivelSeguridad"></div>
+      <p class="nivel" [ngClass]="nivelSeguridad" *ngIf="contrasena">{{ mensajeSeguridad }}</p>
+
+      <label for="confirmar">Confirmar contraseña</label>
+      <input id="confirmar" name="confirmar" type="password" [(ngModel)]="confirmarContrasena" (input)="verificarCoincidencia()" required />
+      <p *ngIf="confirmarContrasena && !contrasenasCoinciden" class="error-text">Las contraseñas no coinciden.</p>
+      <p *ngIf="confirmarContrasena && contrasenasCoinciden" class="success-text">Las contraseñas coinciden.</p>
+
+      <ul class="password-rules">
+        <li [class.valid]="cumpleRequisitos.longitudOk">Mínimo 8 caracteres</li>
+        <li [class.valid]="cumpleRequisitos.tieneMayus && cumpleRequisitos.tieneMinus">Mayúsculas y minúsculas</li>
+        <li [class.valid]="cumpleRequisitos.tieneNumero">Al menos un número</li>
+        <li [class.valid]="cumpleRequisitos.tieneEspecial">Un carácter especial</li>
+      </ul>
+      <button type="submit">Activar cuenta</button>
+    </form>
+  </section>
+</main>
