@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.services';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
@@ -20,6 +20,14 @@ export class Login {
   };
 
   constructor(private auth: AuthService, private router: Router) {}
+
+  get etiquetaIdentificador(): string {
+    return this.tipoAcceso === 'beneficiario' ? 'Nombre de usuario' : 'Correo electrónico';
+  }
+
+  get placeholderIdentificador(): string {
+    return this.tipoAcceso === 'beneficiario' ? 'Ingresa tu nombre de usuario' : 'nombre@correo.com';
+  }
 
   async iniciarSesion() {
     try {

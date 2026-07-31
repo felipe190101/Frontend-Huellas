@@ -1,11 +1,7 @@
 <header class="navbar">
   <div class="container">
-    <div class="logo">
-      <a routerLink="/"><img src="/img/logo.png" alt="Logo Huellas & Legados"></a>
-    </div>
-
+    <div class="logo"><a routerLink="/"><img src="/img/logo.png" alt="Logo Huellas & Legados"></a></div>
     <button class="menu-toggle" (click)="toggleMenu()">☰</button>
-
     <nav class="nav-links" [class.active]="menuOpen">
       <ng-container *ngIf="autenticado && usuario?.nombre_rol === 'admin'; else usuarioNoAdmin">
         <span class="usuario">👋 Bienvenido {{ usuario?.nombre }} {{ usuario?.apellido }}</span>
@@ -14,14 +10,15 @@
         <a routerLink="/admin/auditoria" routerLinkActive="active">Auditoría</a>
         <button (click)="logout()">Cerrar sesión</button>
       </ng-container>
-
       <ng-template #usuarioNoAdmin>
         <ng-container *ngIf="autenticado && (usuario?.nombre_rol === 'beneficiario' || usuario?.rol === 'beneficiario'); else titular">
           <span class="usuario">👋 Bienvenido {{ usuario?.nombre }} {{ usuario?.apellido }}</span>
+          <a routerLink="/beneficiario" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Mi portal</a>
+          <a routerLink="/beneficiario/reclamacion-salud" routerLinkActive="active" (click)="closeMenu()">Reclamación de salud</a>
+          <a routerLink="/beneficiario/reclamacion-muerte" routerLinkActive="active" (click)="closeMenu()">Reclamación de muerte</a>
           <button (click)="logout()">Cerrar sesión</button>
         </ng-container>
       </ng-template>
-
       <ng-template #titular>
         <ng-container *ngIf="autenticado; else sinSesion">
           <span class="usuario">👋 Bienvenido {{ usuario?.nombre }} {{ usuario?.apellido }}</span>
@@ -32,7 +29,6 @@
           <button (click)="logout()">Cerrar sesión</button>
         </ng-container>
       </ng-template>
-
       <ng-template #sinSesion>
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Inicio</a>
         <a routerLink="/planes" routerLinkActive="active" (click)="closeMenu()">Planes</a>

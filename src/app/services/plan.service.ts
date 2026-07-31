@@ -6,12 +6,15 @@ import { environment } from '../../environments/environment';
 export class PlanService {
   // Usamos la URL base definida en el environment
   private apiUrl = `${environment.apiUrl}/planes`;
+  private pagosUrl = `${environment.apiUrl}/pagos`;
 
   async obtenerPlanes() {
     try {
       const res = await fetch(this.apiUrl);
       if (!res.ok) throw new Error('Error al obtener planes');
-      return await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || 'No fue posible iniciar la suscripción');
+      return data;
     } catch (error) {
       console.error('Error en obtenerPlanes:', error);
       throw error;
@@ -34,6 +37,16 @@ export class PlanService {
       console.error('Error en adquirirPlan:', error);
       throw error;
     }
+  }
+
+  async obtenerEstadoPago() {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${this.pagosUrl}/estado`, {
+      headers: { 'Authorization': token ? `Bearer ${token}` : '' }
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || 'No fue posible consultar el pago');
+    return data;
   }
 
   async obtenerSuscripcion() {

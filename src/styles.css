@@ -10,11 +10,21 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
 /* Navbar base */
 .navbar {
   background: #bec0bb; 
   color: white;
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
   z-index: 1000;
@@ -183,7 +193,7 @@
     right: 0;
     background: #bec0bb;
     flex-direction: column;
-    width: 200px;
+    width: min(280px, 100vw);
     padding: 15px;
     box-shadow: -2px 4px 6px rgba(0,0,0,0.2);
   }
@@ -195,6 +205,14 @@
   .nav-links a {
     padding: 10px 0;
     font-size: 1.2rem;
+    margin: 0;
+  }
+
+  .nav-links button,
+  .nav-links button a {
+    width: 100%;
+    margin: 0;
+    justify-content: center;
   }
 }
 
@@ -575,7 +593,7 @@ video {
 /* Grid de 2 columnas */
 .seguridad-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
   gap: 30px;
 }
 
@@ -606,6 +624,45 @@ video {
   font-size: 1.1rem;
   color: #333;
   margin: 0;
+}
+
+@media (max-width: 600px) {
+  .hero-content {
+    margin-top: 0;
+  }
+
+  .hero .brand {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+
+  .video-section {
+    margin-top: 0;
+    padding: 56px 16px;
+  }
+
+  .stats,
+  .memorias,
+  .valor,
+  .seguridad,
+  .innovacion,
+  .proposito,
+  .impacto,
+  .planes,
+  .contacto-section {
+    padding: 56px 16px;
+  }
+
+  .seguridad-item {
+    align-items: flex-start;
+  }
+
+  .planes-disponibles {
+    padding: 36px 16px;
+  }
+
+  .plan-card.destacado {
+    transform: none;
+  }
 }
 
 .innovacion {
@@ -1008,15 +1065,37 @@ app-root {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 100vh;
+}
+
+/* Reduce el espacio inicial: el navbar sticky ya ocupa su lugar en el flujo. */
+.proposito,
+.impacto,
+.planes,
+.contacto-section {
+  padding-top: 36px;
+}
+
+.proposito,
+.lineas-servicio h2 {
+  margin-top: 0;
 }
 
 main {
   flex: 1;
+  width: 100%;
 }
 
 /* Asegúrate de que el footer no se superponga */
 footer {
   margin-top: auto;
+  flex-shrink: 0;
+}
+
+@media (min-width: 601px) {
+  .contacto-section {
+    padding-top: 36px;
+  }
 }
 
 

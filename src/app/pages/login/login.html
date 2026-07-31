@@ -1,44 +1,22 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="logo-section">
-      <img src="/img/logo.png" alt="Logo Huellas & Legados" />
-      <h2>Bienvenido a Huellas y Legados</h2>
-      <p>“Tu historia trasciende, tu legado vive”</p>
-    </div>
+<main class="login-container">
+  <section class="login-card">
+    <header class="login-encabezado">
+      <div class="marca-icono">H</div>
+      <div><p class="eyebrow">Huellas & Legados</p><h1>Bienvenido de nuevo</h1><p>Ingresa para continuar cuidando tu historia y tu legado.</p></div>
+    </header>
 
     <div class="tipo-acceso" role="group" aria-label="Tipo de acceso">
-      <button type="button" [class.activo]="tipoAcceso === 'titular'" (click)="cambiarTipoAcceso('titular')">Titular o administrador</button>
-      <button type="button" [class.activo]="tipoAcceso === 'beneficiario'" (click)="cambiarTipoAcceso('beneficiario')">Beneficiario</button>
+      <button type="button" [class.activo]="tipoAcceso === 'titular'" (click)="cambiarTipoAcceso('titular')"><span>👤</span>Titular o administrador</button>
+      <button type="button" [class.activo]="tipoAcceso === 'beneficiario'" (click)="cambiarTipoAcceso('beneficiario')"><span>🤝</span>Beneficiario</button>
     </div>
 
     <form (ngSubmit)="iniciarSesion()">
-      <div class="form-group">
-        <label for="correo">{{ tipoAcceso === 'beneficiario' ? 'Nombre de usuario' : 'Correo electrónico' }}</label>
-        <input
-          [type]="tipoAcceso === 'beneficiario' ? 'text' : 'email'"
-          id="correo"
-          name="correo"
-          [(ngModel)]="credenciales.correo"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="contrasena">Contraseña</label>
-        <input type="password" id="contrasena" name="contrasena" [(ngModel)]="credenciales.contrasena" required />
-      </div>
-
-      <button type="submit" class="btn-login">Iniciar sesión</button>
+      <div class="form-group"><label for="identificador">{{ etiquetaIdentificador }}</label><input id="identificador" [type]="tipoAcceso === 'titular' ? 'email' : 'text'" [(ngModel)]="credenciales.correo" name="identificador" [placeholder]="placeholderIdentificador" required autocomplete="username" /></div>
+      <div class="form-group"><div class="label-fila"><label for="contrasena">Contraseña</label></div><input id="contrasena" type="password" [(ngModel)]="credenciales.contrasena" name="contrasena" placeholder="Ingresa tu contraseña" required autocomplete="current-password" /></div>
+      <button type="submit" class="btn-login">Iniciar sesión <span>→</span></button>
     </form>
 
-    <div class="extra-links" *ngIf="tipoAcceso === 'beneficiario'">
-      <p>¿Aún no tienes contraseña?</p>
-      <span>Usa el enlace de activación enviado a tu correo.</span>
-    </div>
-
-    <div class="extra-links">
-      <p>¿Deseas crear tu cuenta como titular de Huellas & Legados?</p>
-      <a (click)="irARegistro()">Regístrate aquí</a>
-    </div>
-  </div>
-</div>
+    <div class="extra-links" *ngIf="tipoAcceso === 'beneficiario'"><p>¿Aún no activas tu cuenta? Usa el enlace enviado por el titular.</p></div>
+    <div class="extra-links" *ngIf="tipoAcceso === 'titular'"><p>¿Aún no tienes cuenta? <a routerLink="/registro">Crear una cuenta</a></p></div>
+  </section>
+</main>

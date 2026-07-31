@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 type ModoCaptura = 'foto' | 'audio' | 'video' | null;
 
@@ -14,6 +15,8 @@ type ModoCaptura = 'foto' | 'audio' | 'video' | null;
 })
 export class Archivos implements OnInit, OnDestroy {
   archivos: any[] = [];
+  filtroTexto = '';
+  filtroTipo = 'todos';
   private baseUrl = environment.apiUrl;
   private apiUrl = `${this.baseUrl}/archivos`;
 
@@ -38,7 +41,7 @@ export class Archivos implements OnInit, OnDestroy {
   private mediaChunks: BlobPart[] = [];
   private descartarGrabacion = false;
 
-  constructor(private readonly ngZone: NgZone) {}
+  constructor(private readonly ngZone: NgZone, private readonly router: Router) {}
 
   async ngOnInit() {
     await this.obtenerArchivos();
@@ -69,6 +72,34 @@ export class Archivos implements OnInit, OnDestroy {
     }
   }
 
+  get tiposDisponibles(): string[] {
+    return [...new Set(this.archivos.map((archivo) => this.normalizarTipo(archivo.tipo)))];
+  }
+
+  get archivosFiltrados(): any[] {
+    const texto = this.filtroTexto.trim().toLowerCase();
+    return this.archivos.filter((archivo) => {
+      const tipo = this.normalizarTipo(archivo.tipo);
+      const coincideTipo = this.filtroTipo === 'todos' || tipo === this.filtroTipo;
+      const coincideTexto = !texto || String(archivo.nombre || '').toLowerCase().includes(texto);
+      return coincideTipo && coincideTexto;
+    });
+  }
+
+  contarPorTipo(tipo: string): number {
+    return this.archivos.filter((archivo) => this.normalizarTipo(archivo.tipo) === tipo).length;
+  }
+
+  iconoTipo(tipo: string): string {
+    const iconos: Record<string, string> = { imagenes: '🖼️', audios: '🎵', videos: '🎬', documentos: '📄' };
+    return iconos[this.normalizarTipo(tipo)] || '📁';
+  }
+
+  etiquetaTipo(tipo: string): string {
+    const etiquetas: Record<string, string> = { imagenes: 'Imágenes', audios: 'Audios', videos: 'Videos', documentos: 'Documentos' };
+    return etiquetas[this.normalizarTipo(tipo)] || tipo;
+  }
+
   async subirArchivo(event: any, tipo: string) {
     const file = event.target.files[0];
     if (!file) return;
@@ -90,12 +121,14 @@ export class Archivos implements OnInit, OnDestroy {
     this.submenuActivo = null;
   }
 
-  abrirSelector(input: HTMLInputElement | null): void {
+  async abrirSelector(input: HTMLInputElement | null): Promise<void> {
+    if (!(await this.validarPlanAntesDeCarga())) return;
     if (!input) return;
     input.click();
   }
 
   async iniciarFoto(): Promise<void> {
+    if (!(await this.validarPlanAntesDeCarga())) return;
     await this.abrirCaptura('foto');
   }
 
@@ -104,6 +137,8 @@ export class Archivos implements OnInit, OnDestroy {
       this.detenerGrabacion();
       return;
     }
+
+    if (!(await this.validarPlanAntesDeCarga())) return;
 
     await this.abrirCaptura('audio');
     this.iniciarGrabacion('audio');
@@ -114,6 +149,8 @@ export class Archivos implements OnInit, OnDestroy {
       this.detenerGrabacion();
       return;
     }
+
+    if (!(await this.validarPlanAntesDeCarga())) return;
 
     await this.abrirCaptura('video');
     this.iniciarGrabacion('video');
@@ -132,6 +169,27 @@ export class Archivos implements OnInit, OnDestroy {
   async subirVideoDesdeMenu(event: Event): Promise<void> {
     await this.subirArchivo(event, 'videos');
     this.cerrarSubmenus();
+  }
+
+  private async validarPlanAntesDeCarga(): Promise<boolean> {
+    try {
+      const respuesta = await fetch(`${this.baseUrl}/planes/suscripcion`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+      });
+      if (respuesta.ok) return true;
+    } catch {
+      // Si no se puede comprobar el plan, se conserva una postura segura.
+    }
+
+    await Swal.fire({
+      icon: 'info',
+      title: 'Plan activo requerido',
+      text: 'Debes tener un plan activo antes de cargar o grabar archivos.',
+      confirmButtonText: 'Ver planes',
+      confirmButtonColor: '#3180ab'
+    });
+    this.router.navigate(['/planes']);
+    return false;
   }
 
   cerrarCaptura(cancelado = false): void {
@@ -417,6 +475,12 @@ export class Archivos implements OnInit, OnDestroy {
 
       if (!resp.ok) {
         const data = await resp.json().catch(() => ({}));
+        if (data?.code === 'PLAN_ACTIVO_REQUERIDO') {
+          Swal.close();
+          await Swal.fire({ icon: 'info', title: 'Plan activo requerido', text: 'Debes tener un plan activo para cargar archivos.', confirmButtonText: 'Ver planes', confirmButtonColor: '#3180ab' });
+          this.router.navigate(['/planes']);
+          return;
+        }
         throw new Error(data?.error || data?.message || 'Error al subir el archivo');
       }
 

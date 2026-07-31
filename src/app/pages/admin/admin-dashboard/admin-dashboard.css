@@ -25,3 +25,15 @@
   color: white;
   transform: scale(1.05);
 }
+
+@media (max-width: 600px) {
+  .admin-panel {
+    padding: 6rem 1rem 2rem;
+  }
+
+  .admin-card {
+    width: 100%;
+    max-width: 360px;
+    padding: 1.5rem;
+  }
+}

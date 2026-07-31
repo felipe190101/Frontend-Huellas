@@ -27,6 +27,9 @@ export class Perfil implements OnInit {
   aceptaTerminosPendiente = false;
   versionTerminos = '';
   cargandoTerminos = false;
+  mostrarOpcionCancelar = false;
+  resumenArchivos = { total: 0, imagenes: 0, audios: 0, videos: 0, documentos: 0 };
+  almacenamiento = { limite_bytes: 0, usado_bytes: 0, disponible_bytes: 0 };
 
   constructor(private usuarioService: UsuarioService, private router: Router, private legalService: LegalService) {}
 
@@ -38,10 +41,43 @@ export class Perfil implements OnInit {
       this.usuario.telefono_codigo_pais = this.usuario.telefono_codigo_pais || '+57';
       this.usuario.telefono_nacional = this.usuario.telefono_nacional || '';
       this.suscripcion = data.suscripcion;
+      this.almacenamiento = data.almacenamiento || this.almacenamiento;
+      await this.cargarResumenArchivos();
       if (!this.usuario.acepta_terminos) await this.cargarTerminosVigentes();
     } catch (error: any) {
       Swal.fire('Error', error.message, 'error');
     }
+  }
+
+  async cargarResumenArchivos() {
+    try {
+      const respuesta = await fetch(`${this.baseUrl}/archivos`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+      });
+      if (!respuesta.ok) return;
+      const archivos = await respuesta.json();
+      this.resumenArchivos.total = archivos.length;
+      archivos.forEach((archivo: any) => {
+        const tipo = String(archivo.tipo || '').toLowerCase();
+        if (tipo.includes('imagen')) this.resumenArchivos.imagenes++;
+        else if (tipo.includes('audio')) this.resumenArchivos.audios++;
+        else if (tipo.includes('video')) this.resumenArchivos.videos++;
+        else this.resumenArchivos.documentos++;
+      });
+    } catch {
+      // El perfil sigue disponible aunque el resumen de archivos no se pueda consultar.
+    }
+  }
+
+  get almacenamientoPlan(): number {
+    return Number(this.suscripcion?.almacenamiento_max || 0);
+  }
+
+  get espacioUsadoGB(): string { return (Number(this.almacenamiento.usado_bytes) / 1024 ** 3).toFixed(2); }
+  get espacioDisponibleGB(): string { return (Number(this.almacenamiento.disponible_bytes) / 1024 ** 3).toFixed(2); }
+  get porcentajeUso(): number {
+    const limite = Number(this.almacenamiento.limite_bytes);
+    return limite ? Math.min(100, (Number(this.almacenamiento.usado_bytes) / limite) * 100) : 0;
   }
 
   async cargarTerminosVigentes() {

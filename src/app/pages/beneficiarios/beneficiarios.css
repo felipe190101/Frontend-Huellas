@@ -30,6 +30,16 @@ h2 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
+.tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+}
+
+.tabla-contenedor .tabla {
+  min-width: 640px;
+}
+
 .tabla th, .tabla td {
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -64,7 +74,10 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  /* Debe cubrir también la barra de navegación fija/sticky. */
+  z-index: 1100;
+  padding: 24px;
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -73,8 +86,37 @@ h2 {
   padding: 2rem;
   width: 100%;
   max-width: 500px;
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   animation: fadeIn 0.3s ease-in-out;
+}
+
+@media (max-width: 600px) {
+  .contenedor {
+    margin-top: 80px;
+    padding: 14px;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .modal-content {
+    margin: 0;
+    padding: 1.25rem;
+  }
+
+  .botones {
+    justify-content: stretch;
+    flex-direction: column;
+  }
+
+  .botones button {
+    width: 100%;
+  }
 }
 
 .form-group {

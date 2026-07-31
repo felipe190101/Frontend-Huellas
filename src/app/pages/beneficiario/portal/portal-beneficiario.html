@@ -1,11 +1,35 @@
 <main class="portal">
   <p *ngIf="cargando">Cargando información...</p>
+
   <section *ngIf="perfil" class="tarjeta">
     <h1>Portal del beneficiario</h1>
-    <h2>Bienvenido, {{ perfil.nombre }} {{ perfil.apellido }}</h2>
-    <p><strong>Usuario:</strong> {{ perfil.nombre_usuario }}</p>
-    <p><strong>Relación:</strong> {{ perfil.relacion }}</p>
-    <p><strong>Correo:</strong> {{ perfil.correo || 'No registrado' }}</p>
-    <p class="ayuda">Aquí se incorporarán las funcionalidades y contenidos autorizados para ti.</p>
+    <p class="introduccion">Consulta aquí tus datos y la información del titular al que estás asociado.</p>
+
+    <div class="datos-grid">
+      <section class="ficha">
+        <h2>Tu información</h2>
+        <p><strong>Nombre:</strong> {{ perfil.nombre }} {{ perfil.apellido }}</p>
+        <p><strong>Usuario:</strong> {{ perfil.nombre_usuario || 'No registrado' }}</p>
+        <p><strong>Relación:</strong> {{ perfil.relacion || 'No registrada' }}</p>
+        <p><strong>Correo:</strong> {{ perfil.correo || 'No registrado' }}</p>
+        <p><strong>Teléfono:</strong> {{ perfil.telefono_e164 || perfil.telefono || 'No registrado' }}</p>
+      </section>
+
+      <section class="ficha" *ngIf="titular; else sinTitular">
+        <h2>Información del titular</h2>
+        <p><strong>Nombre:</strong> {{ titular.nombre }} {{ titular.apellido }}</p>
+        <p><strong>Correo:</strong> {{ titular.correo || 'No registrado' }}</p>
+        <p><strong>Teléfono:</strong> {{ titular.telefono_e164 || titular.telefono || 'No registrado' }}</p>
+      </section>
+
+      <ng-template #sinTitular>
+        <section class="ficha ficha-aviso">
+          <h2>Información del titular</h2>
+          <p>La información del titular asociado no está disponible todavía.</p>
+        </section>
+      </ng-template>
+    </div>
+
+    <p class="ayuda">Las funcionalidades y archivos autorizados estarán disponibles en este portal.</p>
   </section>
 </main>

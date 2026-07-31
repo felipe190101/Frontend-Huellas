@@ -1,4 +1,4 @@
-.legal-page { min-height: calc(100vh - 70px); padding: 110px 20px 60px; background: #f7f9fa; }
+.legal-page { min-height: calc(100vh - 70px); padding: 36px 20px 60px; background: #f7f9fa; }
 .legal-page article { max-width: 900px; margin: 0 auto; padding: 40px; border-radius: 12px; background: #fff; box-shadow: 0 4px 15px rgba(0, 0, 0, .08); color: #333; line-height: 1.65; }
 .legal-page h1, .legal-page h2 { color: #24495e; }.legal-page h1 { margin-bottom: 10px; }.legal-page h2 { margin: 28px 0 8px; font-size: 1.3rem; }
 @media (max-width: 600px) { .legal-page { padding: 90px 14px 32px; }.legal-page article { padding: 24px; } }

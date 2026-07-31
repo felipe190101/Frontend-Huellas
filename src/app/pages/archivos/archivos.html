@@ -1,6 +1,22 @@
 <div class="contenedor">
   <h2>📂 Mis Archivos</h2>
 
+  <section class="biblioteca-resumen">
+    <div>
+      <p class="eyebrow">TU BIBLIOTECA DIGITAL</p>
+      <p class="resumen-texto">Organiza tus recuerdos, documentos y mensajes importantes en un solo lugar.</p>
+    </div>
+    <div class="total-archivos"><strong>{{ archivos.length }}</strong><span>archivos guardados</span></div>
+  </section>
+
+  <div class="panel-filtros">
+    <label class="buscador"><span>🔎</span><input type="search" placeholder="Buscar por nombre" [value]="filtroTexto" (input)="filtroTexto = $any($event.target).value"></label>
+    <div class="filtros-tipo">
+      <button type="button" [class.activo]="filtroTipo === 'todos'" (click)="filtroTipo = 'todos'">Todos <span>{{ archivos.length }}</span></button>
+      <button type="button" *ngFor="let tipo of tiposDisponibles" [class.activo]="filtroTipo === tipo" (click)="filtroTipo = tipo">{{ iconoTipo(tipo) }} {{ etiquetaTipo(tipo) }} <span>{{ contarPorTipo(tipo) }}</span></button>
+    </div>
+  </div>
+
   <div class="acciones">
     <div class="menu-accion">
       <button type="button" class="boton-menu" (click)="alternarSubmenu('imagen')">
@@ -47,12 +63,13 @@
       </div>
     </div>
 
-    <label class="boton-menu boton-documento">
+    <button type="button" class="boton-menu boton-documento" (click)="abrirSelector(inputDocumento)">
       📄 Subir documento
-      <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" (change)="subirArchivo($event, 'documentos')" hidden>
-    </label>
+    </button>
+    <input #inputDocumento type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.txt" (change)="subirArchivo($event, 'documentos')" hidden>
   </div>
 
+  <div class="tabla-contenedor">
   <table class="tabla">
     <thead>
       <tr>
@@ -75,6 +92,24 @@
       </tr>
     </tbody>
   </table>
+  </div>
+
+  <section class="archivos-vista" *ngIf="archivosFiltrados.length; else sinArchivos">
+    <article class="archivo-card" *ngFor="let archivo of archivosFiltrados">
+      <div class="archivo-icono">{{ iconoTipo(archivo.tipo) }}</div>
+      <div class="archivo-detalle">
+        <span class="archivo-tipo">{{ etiquetaTipo(archivo.tipo) }}</span>
+        <h3>{{ archivo.nombre }}</h3>
+        <p>Guardado {{ archivo.fecha_subida | date: 'mediumDate' }}</p>
+      </div>
+      <div class="archivo-acciones">
+        <a [href]="archivo.link" target="_blank" class="boton-ver">Ver archivo</a>
+        <button type="button" class="boton-permisos" (click)="abrirPermisos(archivo)">Permisos</button>
+        <button type="button" class="boton-eliminar" aria-label="Eliminar archivo" (click)="eliminarArchivo(archivo.id_archivo)">🗑️</button>
+      </div>
+    </article>
+  </section>
+  <ng-template #sinArchivos><div class="estado-vacio"><span>📁</span><h3>No encontramos archivos</h3><p>Prueba con otro filtro o añade un nuevo recuerdo usando las opciones superiores.</p></div></ng-template>
 </div>
 
 <div class="modal-captura" *ngIf="mediaModalVisible">

@@ -18,6 +18,7 @@ import { TerminosCondiciones } from './pages/legal/terminos-condiciones/terminos
 import { PoliticaPrivacidad } from './pages/legal/politica-privacidad/politica-privacidad';
 import { ActivarCuentaBeneficiario } from './pages/beneficiario/activar-cuenta/activar-cuenta';
 import { PortalBeneficiario } from './pages/beneficiario/portal/portal-beneficiario';
+import { Reclamacion } from './pages/beneficiario/reclamacion/reclamacion';
 
 export const routes: Routes = [
   { path: '', component: Home },        // Home por defecto
@@ -30,6 +31,8 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'beneficiario/activar', component: ActivarCuentaBeneficiario },
   { path: 'beneficiario', component: PortalBeneficiario },
+  { path: 'beneficiario/reclamacion-salud', component: Reclamacion, data: { tipo: 'salud' } },
+  { path: 'beneficiario/reclamacion-muerte', component: Reclamacion, data: { tipo: 'muerte' } },
   { path: 'perfil', component: Perfil },
   { path: 'admin/usuarios', component: AdminUsuarios, canActivate: [AdminGuard] },
   { path: 'admin/planes', component: AdminPlanes, canActivate: [AdminGuard] },

@@ -92,3 +92,25 @@ input, select, textarea {
 .btn-volver:hover {
   background: #eef6fb;
 }
+
+@media (max-width: 600px) {
+  .voluntad-container {
+    margin: 86px 12px 28px;
+    padding: 18px 14px;
+    border-radius: 10px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .botones {
+    display: grid;
+    gap: 10px;
+  }
+
+  .btn-volver {
+    margin-left: 0;
+  }
+}

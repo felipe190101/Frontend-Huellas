@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 // IMPORTANTE: Importamos el environment
 import { environment } from '../../../environments/environment';
 import { TelefonoInternacional } from '../../shared/telefono-internacional/telefono-internacional';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-beneficiarios',
@@ -32,6 +33,8 @@ export class Beneficiarios implements OnInit {
   // Usamos la URL base del environment
   private apiUrl = `${environment.apiUrl}/beneficiarios`;
 
+  constructor(private router: Router) {}
+
   async ngOnInit() {
     await this.obtenerBeneficiarios();
   }
@@ -57,7 +60,19 @@ export class Beneficiarios implements OnInit {
 
   mostrarModal = false;
 
-  abrirFormulario(beneficiario?: any) {
+  async abrirFormulario(beneficiario?: any) {
+    if (!beneficiario && !(await this.tienePlanActivo())) {
+      await Swal.fire({
+        icon: 'info',
+        title: 'Plan activo requerido',
+        text: 'Debes tener un plan activo antes de registrar un beneficiario.',
+        confirmButtonText: 'Ver planes',
+        confirmButtonColor: '#3180ab'
+      });
+      this.router.navigate(['/planes']);
+      return;
+    }
+
     this.modoEdicion = !!beneficiario;
     const nombreCompleto = String(beneficiario?.nombre_completo || '').trim();
     const partesNombre = nombreCompleto.split(/\s+/).filter(Boolean);
@@ -88,6 +103,17 @@ export class Beneficiarios implements OnInit {
           relacion: ''
         };
     this.mostrarModal = true;
+  }
+
+  private async tienePlanActivo(): Promise<boolean> {
+    try {
+      const respuesta = await fetch(`${environment.apiUrl}/planes/suscripcion`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+      });
+      return respuesta.ok;
+    } catch {
+      return false;
+    }
   }
 
   cerrarModal() {
@@ -127,6 +153,11 @@ export class Beneficiarios implements OnInit {
         body: JSON.stringify(this.datosBeneficiario())
       });
       const data = await resp.json();
+      if (data.code === 'PLAN_ACTIVO_REQUERIDO') {
+        await Swal.fire({ icon: 'info', title: 'Plan activo requerido', text: 'Debes tener un plan activo para inscribir beneficiarios.', confirmButtonText: 'Ver planes', confirmButtonColor: '#3180ab' });
+        this.router.navigate(['/planes']);
+        return;
+      }
       if (!resp.ok) throw new Error(data.error || data.mensaje || 'Error al crear beneficiario');
 
       const correoEnviado = data?.notificacionCorreo?.enviado === true;

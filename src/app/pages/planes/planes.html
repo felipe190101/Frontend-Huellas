@@ -31,12 +31,16 @@
 
         <ul>
           <li>👥 Hasta {{ plan.beneficiarios_max }} beneficiarios</li>
-          <li>💾 {{ plan.almacenamiento_max | number }} MB de almacenamiento</li>
+          <li>💾 {{ plan.almacenamiento_max | number }} GB de almacenamiento</li>
           <li>💰 Precio mensual: ${{ plan.precio_mensual }}</li>
           <li>💰 Precio anual: ${{ plan.precio_anual }}</li>
         </ul>
 
-        <button (click)="adquirirPlan(plan.id_plan)">Adquirir Plan</button>
+        <button
+          (click)="adquirirPlan(plan.id_plan)"
+          [disabled]="procesandoPlanId !== null">
+          {{ procesandoPlanId === plan.id_plan ? 'Procesando...' : 'Suscribirme' }}
+        </button>
       </div>
     </div>
 

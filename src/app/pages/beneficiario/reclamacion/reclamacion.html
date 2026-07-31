@@ -1,0 +1,13 @@
+<main class="reclamacion-page">
+  <section class="reclamacion-card">
+    <h1>{{ titulo }}</h1>
+    <p>Adjunta los documentos solicitados. Se aceptan PDF, JPG y PNG, con un máximo de 10 MB por archivo.</p>
+    <div class="documentos">
+      <label><span>{{ documentoPrincipal.etiqueta }}</span><input type="file" accept=".pdf,image/jpeg,image/png" (change)="seleccionarArchivo($event, documentoPrincipal.campo)"><small>{{ archivos[documentoPrincipal.campo]?.name || 'Sin archivo seleccionado' }}</small></label>
+      <label><span>Cédula del beneficiario</span><input type="file" accept=".pdf,image/jpeg,image/png" (change)="seleccionarArchivo($event, 'cedula_beneficiario')"><small>{{ archivos['cedula_beneficiario']?.name || 'Sin archivo seleccionado' }}</small></label>
+      <label><span>Cédula del titular</span><input type="file" accept=".pdf,image/jpeg,image/png" (change)="seleccionarArchivo($event, 'cedula_titular')"><small>{{ archivos['cedula_titular']?.name || 'Sin archivo seleccionado' }}</small></label>
+    </div>
+    <p class="mensaje error" *ngIf="error">{{ error }}</p><p class="mensaje exito" *ngIf="exito">{{ exito }}</p>
+    <div class="acciones"><button type="button" class="secundario" (click)="volver()">Volver</button><button type="button" (click)="enviar()" [disabled]="enviando">{{ enviando ? 'Enviando...' : 'Enviar reclamación' }}</button></div>
+  </section>
+</main>

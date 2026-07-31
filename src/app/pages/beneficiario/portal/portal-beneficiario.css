@@ -1,1 +1,42 @@
-.portal { max-width: 980px; margin: 40px auto; padding: 0 20px; } header { display: flex; align-items: center; justify-content: space-between; gap: 16px; } h1, h2 { color: #1e4b67; } button { background: #3180ab; color: #fff; border: 0; padding: 10px 14px; border-radius: 9px; cursor: pointer; } .tarjeta { background: #fff; border: 1px solid #dceaf3; border-radius: 16px; padding: 28px; box-shadow: 0 5px 18px rgba(30,75,103,.08); } .ayuda { margin-top: 24px; color: #537080; }
+.portal {
+  max-width: 980px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+h1, h2 { color: #1e4b67; }
+
+.tarjeta {
+  background: #fff;
+  border: 1px solid #dceaf3;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 5px 18px rgba(30, 75, 103, .08);
+}
+
+.introduccion, .ayuda { color: #537080; }
+.introduccion { margin: 8px 0 24px; }
+.ayuda { margin-top: 24px; }
+
+.datos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.ficha {
+  padding: 20px;
+  border: 1px solid #dceaf3;
+  border-radius: 12px;
+  background: #f5f9fc;
+}
+
+.ficha h2 { margin: 0 0 16px; font-size: 1.25rem; }
+.ficha p { margin: 10px 0; color: #344b5a; overflow-wrap: anywhere; }
+.ficha-aviso { background: #fffaf0; border-color: #f1d9a2; }
+
+@media (max-width: 600px) {
+  .portal { margin: 24px auto 28px; padding: 0 14px; }
+  .tarjeta { padding: 20px 16px; }
+  .datos-grid { grid-template-columns: 1fr; }
+}

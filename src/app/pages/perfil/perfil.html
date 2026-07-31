@@ -1,139 +1,28 @@
-<div class="perfil-container">
-  <h2>Mi Perfil</h2>
+<main class="perfil-container">
+  <header class="perfil-encabezado">
+    <div><p class="eyebrow">GESTIÓN DE CUENTA</p><h1>Hola, {{ usuario.nombre || 'usuario' }}</h1><p>Consulta el estado de tu cuenta y mantén tus datos al día.</p></div>
+    <a routerLink="/archivos" class="btn-archivos">Ir a Mis archivos</a>
+  </header>
 
   <section class="aceptacion-legal-perfil" *ngIf="!usuario.acepta_terminos">
-    <h3>Actualización de términos requerida</h3>
-    <p>Para continuar usando la plataforma debes aceptar los términos y condiciones vigentes.</p>
-    <label>
-      <input type="checkbox" [(ngModel)]="aceptaTerminosPendiente" name="aceptaTerminosPendiente" />
-      Acepto los <a routerLink="/terminos-y-condiciones" target="_blank">términos y condiciones</a> y la
-      <a routerLink="/politica-de-privacidad" target="_blank">política de privacidad</a>.
-    </label>
-    <button type="button" (click)="aceptarTerminos()" [disabled]="!aceptaTerminosPendiente || !versionTerminos || cargandoTerminos">
-      {{ cargandoTerminos ? 'Cargando...' : 'Aceptar términos' }}
-    </button>
+    <h3>Actualización de términos requerida</h3><p>Para continuar usando la plataforma debes aceptar los términos y condiciones vigentes.</p>
+    <label><input type="checkbox" [(ngModel)]="aceptaTerminosPendiente" name="aceptaTerminosPendiente" />Acepto los <a routerLink="/terminos-y-condiciones" target="_blank">términos y condiciones</a> y la <a routerLink="/politica-de-privacidad" target="_blank">política de privacidad</a>.</label>
+    <button type="button" (click)="aceptarTerminos()" [disabled]="!aceptaTerminosPendiente || !versionTerminos || cargandoTerminos">{{ cargandoTerminos ? 'Cargando...' : 'Aceptar términos' }}</button>
   </section>
 
-  <div class="perfil-grid">
-    <!-- 🔹 Columna izquierda: Datos del usuario -->
-    <div class="perfil-info">
-      <h3>Datos personales</h3>
-      <form (ngSubmit)="actualizarPerfil()" #form="ngForm">
-        <div class="form-group">
-          <label>Nombre</label>
-          <input type="text" [(ngModel)]="usuario.nombre" name="nombre" required />
-        </div>
+  <section class="panel-cuenta" *ngIf="suscripcion; else noPlan">
+    <div class="plan-actual"><span class="etiqueta-plan">PLAN ACTIVO</span><h2>{{ suscripcion.nombre_plan }}</h2><p>Estado: <strong>{{ suscripcion.estado }}</strong></p><p class="fecha-plan">Vigente hasta {{ suscripcion.fecha_fin | date }}</p></div>
+    <div class="almacenamiento"><span>☁️ Almacenamiento</span><strong>{{ espacioUsadoGB }} GB <small>usados de {{ almacenamientoPlan }} GB</small></strong><div class="barra-uso"><span [style.width.%]="porcentajeUso"></span></div><p>{{ espacioDisponibleGB }} GB disponibles para tus archivos y recuerdos.</p></div>
+    <div class="plan-acciones"><a routerLink="/planes" class="btn-renovar">Renovar mi plan</a><button type="button" class="enlace-secundario" (click)="mostrarOpcionCancelar = !mostrarOpcionCancelar">Gestionar suscripción</button><button *ngIf="mostrarOpcionCancelar" type="button" class="btn-cancelar" (click)="cancelarSuscripcion()">Cancelar suscripción</button></div>
+  </section>
+  <ng-template #noPlan><section class="panel-cuenta sin-plan"><div><span class="etiqueta-plan">SIN PLAN ACTIVO</span><h2>Activa tu espacio digital</h2><p>Elige un plan para disponer de almacenamiento para tus recuerdos.</p></div><a routerLink="/planes" class="btn-renovar">Ver planes</a></section></ng-template>
 
-        <div class="form-group">
-          <label>Apellido</label>
-          <input type="text" [(ngModel)]="usuario.apellido" name="apellido" required />
-        </div>
+  <section class="resumen-biblioteca"><div class="resumen-titulo"><div><p class="eyebrow">RESUMEN DE CONTENIDO</p><h2>Tu biblioteca</h2></div><a routerLink="/archivos">Ver todos</a></div><div class="metricas-archivos"><article><span>📁</span><strong>{{ resumenArchivos.total }}</strong><p>Archivos totales</p></article><article><span>🖼️</span><strong>{{ resumenArchivos.imagenes }}</strong><p>Imágenes</p></article><article><span>🎬</span><strong>{{ resumenArchivos.videos }}</strong><p>Videos</p></article><article><span>🎵</span><strong>{{ resumenArchivos.audios }}</strong><p>Audios</p></article><article><span>📄</span><strong>{{ resumenArchivos.documentos }}</strong><p>Documentos</p></article></div></section>
 
-        <div class="form-group">
-          <label>Correo electrónico</label>
-          <input type="email" [(ngModel)]="usuario.correo" name="correo" disabled />
-        </div>
+  <section class="perfil-grid">
+    <div class="perfil-info"><h2>Datos personales</h2><p class="seccion-ayuda">Actualiza la información de contacto de tu cuenta.</p><form (ngSubmit)="actualizarPerfil()" #form="ngForm"><div class="form-group"><label>Nombre</label><input type="text" [(ngModel)]="usuario.nombre" name="nombre" required /></div><div class="form-group"><label>Apellido</label><input type="text" [(ngModel)]="usuario.apellido" name="apellido" required /></div><div class="form-group"><label>Correo electrónico</label><input type="email" [(ngModel)]="usuario.correo" name="correo" disabled /></div><div class="form-group"><label>Teléfono</label><app-telefono-internacional [(pais)]="usuario.telefono_pais" [(codigoPais)]="usuario.telefono_codigo_pais" [(nacional)]="usuario.telefono_nacional" [telefonoE164]="usuario.telefono_e164" /></div><div class="form-group"><label>Dirección</label><input type="text" [(ngModel)]="usuario.direccion" name="direccion" /></div><button type="submit">Guardar cambios</button></form></div>
+    <aside class="estado-cuenta"><h2>Estado de cuenta</h2><div><span>Correo verificado</span><strong>{{ usuario.correo || 'Sin correo' }}</strong></div><div><span>Términos y condiciones</span><strong [class.estado-ok]="usuario.acepta_terminos">{{ usuario.acepta_terminos ? 'Aceptados' : 'Pendientes' }}</strong></div><div><span>Voluntad de salud</span><strong [class.estado-ok]="usuario.formulario_salud_subido">{{ usuario.formulario_salud_subido ? 'Cargada' : 'Pendiente' }}</strong></div><div><span>Voluntad de muerte</span><strong [class.estado-ok]="usuario.formulario_muerte_subido">{{ usuario.formulario_muerte_subido ? 'Cargada' : 'Pendiente' }}</strong></div></aside>
+  </section>
 
-        <div class="form-group">
-          <label>Teléfono</label>
-          <app-telefono-internacional
-            [(pais)]="usuario.telefono_pais"
-            [(codigoPais)]="usuario.telefono_codigo_pais"
-            [(nacional)]="usuario.telefono_nacional"
-            [telefonoE164]="usuario.telefono_e164"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Dirección</label>
-          <input type="text" [(ngModel)]="usuario.direccion" name="direccion" />
-        </div>
-
-        <button type="submit">Actualizar datos</button>
-      </form>
-    </div>
-
-    <!-- 🔹 Columna derecha: Información de la suscripción -->
-    <div class="perfil-suscripcion" *ngIf="suscripcion; else noPlan">
-        <h3>Mi suscripción</h3>
-        <p><strong>Plan:</strong> {{ suscripcion.nombre_plan }}</p>
-        <p><strong>Estado:</strong> {{ suscripcion.estado }}</p>
-        <p><strong>Fecha de inicio:</strong> {{ suscripcion.fecha_inicio | date }}</p>
-        <p><strong>Fecha de finalización:</strong> {{ suscripcion.fecha_fin | date }}</p>
-        <p><strong>Precio mensual:</strong> ${{ suscripcion.precio_mensual }}</p>
-        <p><strong>Precio anual:</strong> ${{ suscripcion.precio_anual }}</p>
-
-        <button class="btn-cancelar" (click)="cancelarSuscripcion()">
-            Cancelar suscripción
-        </button>
-    </div>
-
-    <ng-template #noPlan>
-      <div class="perfil-suscripcion no-plan">
-        <h3>Sin suscripción activa</h3>
-        <p>No tienes ningún plan activo actualmente.</p>
-        <a href="/planes" class="btn-plan">Ver planes</a>
-      </div>
-    </ng-template>
-  
-  </div>
-
-  <div class="perfil-voluntades">
-    <h2>🕊️ Mis Voluntades</h2>
-
-    <div class="voluntades-grid">
-      <!-- Voluntad de Salud -->
-      <div class="voluntad-card">
-        <h3>Voluntad de Salud</h3>
-        <p>Define tus deseos sobre tratamientos médicos y cuidados de salud.</p>
-
-        <div class="acciones">
-          <!-- Botón de descarga desde Drive -->
-          <a href="https://drive.google.com/uc?export=download&id=1P8LtAIyimE_HOs6enV9SJfkhcJBBMMNs"
-            target="_blank"
-            class="btn-descargar">📥 Descargar PDF</a>
-
-          <!-- Llenar en línea -->
-          <button (click)="irAFormulario('salud')" class="btn-llenar">🖊️ Llenar en línea</button>
-        </div>
-
-        <!-- Nuevo mensaje antes de subir -->
-        <p class="instruccion-subida">
-          Una vez hayas diligenciado el formulario, por favor súbelo aquí:
-        </p>
-
-        <input type="file" (change)="subirArchivo($event, 'salud')" accept=".pdf" />
-
-        <div class="estado">
-          <span *ngIf="usuario.formulario_salud_subido" class="check">✅ Formulario cargado</span>
-          <span *ngIf="!usuario.formulario_salud_subido" class="pendiente">⬜ Pendiente</span>
-        </div>
-      </div>
-
-      <!-- Voluntad de Muerte -->
-      <div class="voluntad-card">
-        <h3>Voluntad de Muerte</h3>
-        <p>Establece tus deseos sobre disposición del cuerpo, donaciones, entre otros.</p>
-
-        <div class="acciones">
-          <a href="https://drive.google.com/uc?export=download&id=1P8LtAIyimE_HOs6enV9SJfkhcJBBMMNs"
-            target="_blank"
-            class="btn-descargar">📥 Descargar PDF</a>
-          <button (click)="irAFormulario('muerte')" class="btn-llenar">🖊️ Llenar en línea</button>
-        </div>
-
-        <p class="instruccion-subida">
-          Una vez hayas diligenciado el formulario, por favor súbelo aquí:
-        </p>
-
-        <input type="file" (change)="subirArchivo($event, 'muerte')" accept=".pdf" />
-
-        <div class="estado">
-          <span *ngIf="usuario.formulario_muerte_subido" class="check">✅ Formulario cargado</span>
-          <span *ngIf="!usuario.formulario_muerte_subido" class="pendiente">⬜ Pendiente</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
+  <section class="perfil-voluntades"><h2>Mis voluntades</h2><div class="voluntades-grid"><div class="voluntad-card"><h3>Voluntad de Salud</h3><p>Define tus deseos sobre tratamientos médicos y cuidados de salud.</p><div class="acciones"><a href="https://drive.google.com/uc?export=download&id=1P8LtAIyimE_HOs6enV9SJfkhcJBBMMNs" target="_blank" class="btn-descargar">Descargar PDF</a><button (click)="irAFormulario('salud')" class="btn-llenar">Llenar en línea</button></div><p class="instruccion-subida">También puedes cargar el formulario diligenciado.</p><input type="file" (change)="subirArchivo($event, 'salud')" accept=".pdf" /><div class="estado"><span *ngIf="usuario.formulario_salud_subido" class="check">Formulario cargado</span><span *ngIf="!usuario.formulario_salud_subido" class="pendiente">Pendiente</span></div></div><div class="voluntad-card"><h3>Voluntad de Muerte</h3><p>Establece tus deseos sobre disposición del cuerpo, donaciones, entre otros.</p><div class="acciones"><a href="https://drive.google.com/uc?export=download&id=1P8LtAIyimE_HOs6enV9SJfkhcJBBMMNs" target="_blank" class="btn-descargar">Descargar PDF</a><button (click)="irAFormulario('muerte')" class="btn-llenar">Llenar en línea</button></div><p class="instruccion-subida">También puedes cargar el formulario diligenciado.</p><input type="file" (change)="subirArchivo($event, 'muerte')" accept=".pdf" /><div class="estado"><span *ngIf="usuario.formulario_muerte_subido" class="check">Formulario cargado</span><span *ngIf="!usuario.formulario_muerte_subido" class="pendiente">Pendiente</span></div></div></div></section>
+</main>
