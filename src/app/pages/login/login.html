@@ -6,7 +6,7 @@
     </header>
 
     <div class="tipo-acceso" role="group" aria-label="Tipo de acceso">
-      <button type="button" [class.activo]="tipoAcceso === 'titular'" (click)="cambiarTipoAcceso('titular')"><span>👤</span>Titular o administrador</button>
+      <button type="button" [class.activo]="tipoAcceso === 'titular'" (click)="cambiarTipoAcceso('titular')"><span>👤</span>Titular</button>
       <button type="button" [class.activo]="tipoAcceso === 'beneficiario'" (click)="cambiarTipoAcceso('beneficiario')"><span>🤝</span>Beneficiario</button>
     </div>
 
