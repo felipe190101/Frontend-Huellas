@@ -73,6 +73,17 @@ export class Perfil implements OnInit {
     return Number(this.suscripcion?.almacenamiento_max || 0);
   }
 
+  get renovacionAutomatica(): boolean {
+    const estadoPago = String(this.suscripcion?.estado_pago || '').toLowerCase();
+    return !['cancelada', 'cancelled', 'canceled', 'pausada', 'paused'].includes(estadoPago);
+  }
+
+  get textoRenovacion(): string {
+    return this.renovacionAutomatica
+      ? 'Renovación automática'
+      : 'Renovación automática cancelada';
+  }
+
   get espacioUsadoGB(): string { return (Number(this.almacenamiento.usado_bytes) / 1024 ** 3).toFixed(2); }
   get espacioDisponibleGB(): string { return (Number(this.almacenamiento.disponible_bytes) / 1024 ** 3).toFixed(2); }
   get porcentajeUso(): number {
@@ -117,8 +128,8 @@ export class Perfil implements OnInit {
 
   async cancelarSuscripcion() {
     const confirmacion = await Swal.fire({
-      title: '¿Deseas cancelar tu suscripción?',
-      text: 'Perderás acceso a los beneficios del plan actual.',
+      title: '¿Deseas cancelar la renovación automática?',
+      text: 'Conservarás los beneficios hasta la fecha de vencimiento y no se realizarán nuevos cobros.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, cancelar',
@@ -130,8 +141,9 @@ export class Perfil implements OnInit {
     if (confirmacion.isConfirmed) {
       try {
         const data = await this.usuarioService.cancelarSuscripcion();
-        Swal.fire('Suscripción cancelada', data.message, 'success');
-        this.suscripcion = null; 
+        this.suscripcion = { ...this.suscripcion, estado_pago: 'cancelada' };
+        this.mostrarOpcionCancelar = false;
+        Swal.fire('Renovación cancelada', data.message, 'success');
       } catch (error: any) {
         Swal.fire('Error', error.message, 'error');
       }
