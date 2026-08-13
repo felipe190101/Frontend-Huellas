@@ -99,7 +99,9 @@
         </label>
       </div>
       <p class="error-text" *ngIf="!cargandoTerminos && !versionTerminos">No fue posible verificar la versión vigente de los términos.</p>
-      <button type="submit" [disabled]="!registroForm.valid || cargandoTerminos || !versionTerminos">Registrarme</button>
+      <button type="submit" [disabled]="!registroForm.valid || cargandoTerminos || !versionTerminos || registrando">
+        {{ registrando ? 'Registrando...' : 'Registrarme' }}
+      </button>
     </form>
   </div>
 </section>

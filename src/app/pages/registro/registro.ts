@@ -41,6 +41,7 @@ export class Registro {
   contrasenasCoinciden = true;
   nivelSeguridad = '';
   mensajeSeguridad = '';
+  registrando = false;
 
   cumpleRequisitos: {
     tieneMinus: boolean;
@@ -151,6 +152,14 @@ export class Registro {
     }
 
     try {
+      this.registrando = true;
+      Swal.fire({
+        title: 'Creando cuenta...',
+        text: 'Estamos registrando tu información.',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
       // Reemplazamos la URL de localhost por la variable dinámica
       const respuesta = await fetch(this.apiUrl, {
         method: 'POST',
@@ -160,19 +169,17 @@ export class Registro {
         body: JSON.stringify({ ...this.usuario, acepta_terminos: true, version_terminos: this.versionTerminos })
       });
 
-      const data = await respuesta.json();
+      const data = await respuesta.json().catch(() => ({}));
+      Swal.close();
 
       if (respuesta.ok) {
-        Swal.fire({
+        await Swal.fire({
           icon: 'success',
           title: '¡Registro exitoso!',
           text: data.message || 'Tu cuenta ha sido creada correctamente.',
           confirmButtonColor: '#3180ab'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            this.router.navigate(['/login']);
-          }
         });
+        await this.router.navigate(['/login']);
 
         this.usuario = {
           nombre: '',
@@ -200,6 +207,7 @@ export class Registro {
         });
       }
     } catch (error) {
+      Swal.close();
       console.error('Error al conectar con el backend:', error);
       Swal.fire({
         icon: 'error',
@@ -207,6 +215,8 @@ export class Registro {
         text: 'No se pudo conectar con el servidor.',
         confirmButtonColor: '#3180ab'
       });
+    } finally {
+      this.registrando = false;
     }
   }
 }
