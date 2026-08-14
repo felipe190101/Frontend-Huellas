@@ -11,7 +11,7 @@
   </section>
 
   <section class="panel-cuenta" *ngIf="suscripcion; else noPlan">
-    <div class="plan-actual"><span class="etiqueta-plan">PLAN ACTIVO</span><h2>{{ suscripcion.nombre_plan }}</h2><div class="estado-suscripcion"><span class="estado-plan">Activa</span><small [class.renovacion-cancelada]="!renovacionAutomatica">{{ textoRenovacion }}</small></div><p class="fecha-plan">Vigente hasta {{ suscripcion.fecha_fin | date }}</p></div>
+    <div class="plan-actual"><span class="etiqueta-plan">PLAN ACTIVO</span><h2>{{ suscripcion.nombre_plan }}</h2><div class="estado-suscripcion"><span class="estado-plan">Activa</span><small [class.renovacion-cancelada]="!renovacionAutomatica">{{ textoRenovacion }}</small><small class="cambio-plan-pendiente" *ngIf="suscripcion.nombre_plan_pendiente">Próximo plan: {{ suscripcion.nombre_plan_pendiente }} desde la siguiente renovación</small></div><p class="fecha-plan">Vigente hasta {{ suscripcion.fecha_fin | date }}</p></div>
     <div class="almacenamiento"><span>☁️ Almacenamiento</span><strong>{{ espacioUsadoGB }} GB <small>usados de {{ almacenamientoPlan }} GB</small></strong><div class="barra-uso"><span [style.width.%]="porcentajeUso"></span></div><p>{{ espacioDisponibleGB }} GB disponibles para tus archivos y recuerdos.</p></div>
     <div class="plan-acciones" *ngIf="renovacionAutomatica"><button type="button" class="enlace-secundario" (click)="mostrarOpcionCancelar = !mostrarOpcionCancelar">Gestionar suscripción</button><button *ngIf="mostrarOpcionCancelar" type="button" class="btn-cancelar" (click)="cancelarSuscripcion()">Cancelar renovación automática</button></div>
   </section>

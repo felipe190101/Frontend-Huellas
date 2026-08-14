@@ -62,14 +62,6 @@ export class Beneficiarios implements OnInit {
 
   async abrirFormulario(beneficiario?: any) {
     if (!beneficiario && !(await this.tienePlanActivo())) {
-      await Swal.fire({
-        icon: 'info',
-        title: 'Plan activo requerido',
-        text: 'Debes tener un plan activo antes de registrar un beneficiario.',
-        confirmButtonText: 'Ver planes',
-        confirmButtonColor: '#3180ab'
-      });
-      this.router.navigate(['/planes']);
       return;
     }
 
@@ -110,10 +102,43 @@ export class Beneficiarios implements OnInit {
       const respuesta = await fetch(`${environment.apiUrl}/planes/suscripcion`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
       });
-      return respuesta.ok;
+      if (respuesta.ok) {
+        const suscripcion = await respuesta.json();
+        const limite = Number(suscripcion?.beneficiarios_max);
+        if (Number.isFinite(limite) && this.beneficiarios.length >= limite) {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'Límite de beneficiarios alcanzado',
+            text: `Tu plan permite máximo ${limite} beneficiarios. Cambia a un plan superior para agregar más.`,
+            confirmButtonText: 'Ver planes superiores',
+            confirmButtonColor: '#3180ab'
+          });
+          this.router.navigate(['/planes']);
+          return false;
+        }
+        return true;
+      }
+      const data = await respuesta.json().catch(() => ({}));
+      await this.mostrarRestriccionSuscripcion(data, 'registrar beneficiarios');
+      return false;
     } catch {
+      await this.mostrarRestriccionSuscripcion({}, 'registrar beneficiarios');
       return false;
     }
+  }
+
+  private async mostrarRestriccionSuscripcion(data: any, accion: string): Promise<void> {
+    const requiereReactivacion = data?.code === 'SUSCRIPCION_REACTIVACION_REQUERIDA';
+    await Swal.fire({
+      icon: 'info',
+      title: requiereReactivacion ? 'Reactiva tu suscripción' : 'Plan activo requerido',
+      text: requiereReactivacion
+        ? `Tu suscripción ya no está vigente. Debes reactivarla para ${accion}.`
+        : `Debes tener un plan activo para ${accion}.`,
+      confirmButtonText: requiereReactivacion ? 'Reactivar suscripción' : 'Ver planes',
+      confirmButtonColor: '#3180ab'
+    });
+    this.router.navigate(['/planes']);
   }
 
   cerrarModal() {
@@ -153,8 +178,18 @@ export class Beneficiarios implements OnInit {
         body: JSON.stringify(this.datosBeneficiario())
       });
       const data = await resp.json();
-      if (data.code === 'PLAN_ACTIVO_REQUERIDO') {
-        await Swal.fire({ icon: 'info', title: 'Plan activo requerido', text: 'Debes tener un plan activo para inscribir beneficiarios.', confirmButtonText: 'Ver planes', confirmButtonColor: '#3180ab' });
+      if (['PLAN_ACTIVO_REQUERIDO', 'SUSCRIPCION_REACTIVACION_REQUERIDA'].includes(data.code)) {
+        await this.mostrarRestriccionSuscripcion(data, 'registrar beneficiarios');
+        return;
+      }
+      if (data.code === 'LIMITE_BENEFICIARIOS_ALCANZADO') {
+        await Swal.fire({
+          icon: 'warning',
+          title: 'Límite de beneficiarios alcanzado',
+          text: data.message,
+          confirmButtonText: 'Ver planes superiores',
+          confirmButtonColor: '#3180ab'
+        });
         this.router.navigate(['/planes']);
         return;
       }

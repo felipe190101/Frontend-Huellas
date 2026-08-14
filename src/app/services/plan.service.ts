@@ -39,6 +39,21 @@ export class PlanService {
     }
   }
 
+  async cambiarPlan(id_plan: number) {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${environment.apiUrl}/suscripciones/cambiar-plan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : '',
+      },
+      body: JSON.stringify({ id_plan }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.message || 'No fue posible programar el cambio de plan.');
+    return data;
+  }
+
   async obtenerEstadoPago() {
     const token = localStorage.getItem('token');
     const res = await fetch(`${this.pagosUrl}/estado`, {

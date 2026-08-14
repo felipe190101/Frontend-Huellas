@@ -26,6 +26,8 @@
     <div class="planes-grid">
       <!-- 🔹 Planes dinámicos desde la base de datos -->
       <div class="plan-card" *ngFor="let plan of planes">
+        <span class="estado-plan-card" *ngIf="esPlanActual(plan.id_plan)">Plan actual</span>
+        <span class="estado-plan-card pendiente" *ngIf="esPlanPendiente(plan.id_plan)">Próximo plan</span>
         <h3>{{ plan.nombre_plan }}</h3>
         <p class="descripcion">{{ plan.descripcion }}</p>
 
@@ -38,8 +40,8 @@
 
         <button
           (click)="adquirirPlan(plan.id_plan)"
-          [disabled]="procesandoPlanId !== null">
-          {{ procesandoPlanId === plan.id_plan ? 'Procesando...' : 'Suscribirme' }}
+          [disabled]="botonDeshabilitado(plan)">
+          {{ textoBoton(plan) }}
         </button>
       </div>
     </div>

@@ -177,19 +177,29 @@ export class Archivos implements OnInit, OnDestroy {
         headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
       });
       if (respuesta.ok) return true;
+      const data = await respuesta.json().catch(() => ({}));
+      await this.mostrarRestriccionSuscripcion(data);
+      return false;
     } catch {
       // Si no se puede comprobar el plan, se conserva una postura segura.
     }
 
+    await this.mostrarRestriccionSuscripcion({});
+    return false;
+  }
+
+  private async mostrarRestriccionSuscripcion(data: any): Promise<void> {
+    const requiereReactivacion = data?.code === 'SUSCRIPCION_REACTIVACION_REQUERIDA';
     await Swal.fire({
       icon: 'info',
-      title: 'Plan activo requerido',
-      text: 'Debes tener un plan activo antes de cargar o grabar archivos.',
-      confirmButtonText: 'Ver planes',
+      title: requiereReactivacion ? 'Reactiva tu suscripción' : 'Plan activo requerido',
+      text: requiereReactivacion
+        ? 'Tu suscripción ya no está vigente. Debes reactivarla para cargar o grabar archivos.'
+        : 'Debes tener un plan activo antes de cargar o grabar archivos.',
+      confirmButtonText: requiereReactivacion ? 'Reactivar suscripción' : 'Ver planes',
       confirmButtonColor: '#3180ab'
     });
     this.router.navigate(['/planes']);
-    return false;
   }
 
   cerrarCaptura(cancelado = false): void {
@@ -451,6 +461,8 @@ export class Archivos implements OnInit, OnDestroy {
       throw new Error('No se encontro informacion del usuario');
     }
 
+    if (!(await this.validarEspacioDisponible(file))) return;
+
     const formData = new FormData();
     formData.append('archivo', file);
     formData.append('tipo', tipo);
@@ -475,10 +487,18 @@ export class Archivos implements OnInit, OnDestroy {
 
       if (!resp.ok) {
         const data = await resp.json().catch(() => ({}));
-        if (data?.code === 'PLAN_ACTIVO_REQUERIDO') {
+        if (['PLAN_ACTIVO_REQUERIDO', 'SUSCRIPCION_REACTIVACION_REQUERIDA'].includes(data?.code)) {
           Swal.close();
-          await Swal.fire({ icon: 'info', title: 'Plan activo requerido', text: 'Debes tener un plan activo para cargar archivos.', confirmButtonText: 'Ver planes', confirmButtonColor: '#3180ab' });
-          this.router.navigate(['/planes']);
+          await this.mostrarRestriccionSuscripcion(data);
+          return;
+        }
+        if (data?.code === 'ALMACENAMIENTO_INSUFICIENTE') {
+          await Swal.fire({
+            icon: 'warning',
+            title: 'Almacenamiento insuficiente',
+            html: `El archivo ocupa <strong>${this.formatearBytes(data.archivo_bytes || file.size)}</strong>, pero solo tienes <strong>${this.formatearBytes(data.disponible_bytes)}</strong> disponibles.`,
+            confirmButtonColor: '#3180ab'
+          });
           return;
         }
         throw new Error(data?.error || data?.message || 'Error al subir el archivo');
@@ -490,6 +510,38 @@ export class Archivos implements OnInit, OnDestroy {
       Swal.close();
       throw error;
     }
+  }
+
+  private async validarEspacioDisponible(file: File): Promise<boolean> {
+    try {
+      const respuesta = await fetch(`${this.baseUrl}/usuarios/perfil`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` }
+      });
+      if (!respuesta.ok) return true;
+
+      const perfil = await respuesta.json();
+      const disponible = Number(perfil?.almacenamiento?.disponible_bytes);
+      if (!Number.isFinite(disponible) || file.size <= disponible) return true;
+
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Almacenamiento insuficiente',
+        html: `El archivo ocupa <strong>${this.formatearBytes(file.size)}</strong>, pero solo tienes <strong>${this.formatearBytes(disponible)}</strong> disponibles.`,
+        confirmButtonColor: '#3180ab'
+      });
+      return false;
+    } catch {
+      // El backend vuelve a comprobar la capacidad antes de guardar en Drive.
+      return true;
+    }
+  }
+
+  private formatearBytes(bytes: number): string {
+    const valor = Math.max(0, Number(bytes) || 0);
+    if (valor < 1024) return `${valor} B`;
+    if (valor < 1024 ** 2) return `${(valor / 1024).toFixed(1)} KB`;
+    if (valor < 1024 ** 3) return `${(valor / 1024 ** 2).toFixed(1)} MB`;
+    return `${(valor / 1024 ** 3).toFixed(2)} GB`;
   }
 
   private normalizarTipo(tipo: string): string {

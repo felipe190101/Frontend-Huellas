@@ -1,0 +1,18 @@
+.plan-card { position: relative; }
+
+.estado-plan-card {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #e3f5ec;
+  color: #177245;
+  font-size: .72rem;
+  font-weight: 800;
+}
+
+.estado-plan-card.pendiente {
+  margin-left: 5px;
+  background: #fff3cd;
+  color: #8a6200;
+}
