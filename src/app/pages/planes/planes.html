@@ -32,8 +32,8 @@
         <ul>
           <li>👥 Hasta {{ plan.beneficiarios_max }} beneficiarios</li>
           <li>💾 {{ plan.almacenamiento_max | number }} GB de almacenamiento</li>
-          <li>💰 Precio mensual: ${{ plan.precio_mensual }}</li>
-          <li>💰 Precio anual: ${{ plan.precio_anual }}</li>
+          <li>💰 Precio mensual: ${{ formatearPrecio(plan.precio_mensual) }}</li>
+          <li>💰 Precio anual: ${{ formatearPrecio(plan.precio_anual) }}</li>
         </ul>
 
         <button

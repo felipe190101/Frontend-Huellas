@@ -22,6 +22,16 @@ export class Planes implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  formatearPrecio(valor: number | string): string {
+    const precio = Number(valor);
+    if (!Number.isFinite(precio)) return '0';
+
+    return new Intl.NumberFormat('es-CO', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(precio);
+  }
+
   async ngOnInit() {
     try {
       this.planes = await this.planService.obtenerPlanes();
