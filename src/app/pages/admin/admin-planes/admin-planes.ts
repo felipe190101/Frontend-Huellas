@@ -4,11 +4,12 @@ import { NgForOf } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { environment } from '../../../../environments/environment';
+import { SoloNumerosDirective } from '../../../shared/solo-numeros.directive';
 
 @Component({
   selector: 'app-admin-planes',
   standalone: true,
-  imports: [FormsModule, NgForOf, CommonModule],
+  imports: [FormsModule, NgForOf, CommonModule, SoloNumerosDirective],
   templateUrl: './admin-planes.html',
   styleUrls: ['./admin-planes.css']
 })

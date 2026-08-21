@@ -1,4 +1,4 @@
-<input #telefonoInput type="tel" inputmode="numeric" autocomplete="tel-national" (input)="actualizarNumero()" />
+<input #telefonoInput type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="15" autocomplete="tel-national" (input)="actualizarNumero()" />
 <small class="telefono-resumen" *ngIf="telefonoE164 || nacional">
   Número cargado: {{ telefonoE164 || (codigoPais + ' ' + nacional) }}
 </small>

@@ -5,16 +5,34 @@ import { FormsModule } from '@angular/forms';
 // IMPORTANTE: Importamos el environment
 import { environment } from '../../../environments/environment';
 import { TelefonoInternacional } from '../../shared/telefono-internacional/telefono-internacional';
+import { SoloNumerosDirective } from '../../shared/solo-numeros.directive';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-beneficiarios',
   standalone: true,
-  imports: [NgFor, NgIf, FormsModule, TelefonoInternacional],
+  imports: [NgFor, NgIf, FormsModule, TelefonoInternacional, SoloNumerosDirective],
   templateUrl: './beneficiarios.html',
   styleUrls: ['./beneficiarios.css']
 })
 export class Beneficiarios implements OnInit {
+  documentoEsNumerico(): boolean {
+    return !['PAS', 'OT'].includes(this.beneficiario.tipo_documento);
+  }
+
+  ajustarDocumentoAlTipo(): void {
+    if (this.documentoEsNumerico()) {
+      this.beneficiario.documento = String(this.beneficiario.documento || '').replace(/\D/g, '');
+    }
+  }
+
+  filtrarDocumento(evento: Event): void {
+    if (!this.documentoEsNumerico()) return;
+    const input = evento.target as HTMLInputElement;
+    const limpio = input.value.replace(/\D/g, '');
+    input.value = limpio;
+    this.beneficiario.documento = limpio;
+  }
   beneficiarios: any[] = [];
   beneficiario = {
     id_beneficiario: null,
@@ -205,9 +223,9 @@ export class Beneficiarios implements OnInit {
 
       Swal.fire('✅ Éxito', `Beneficiario agregado correctamente. ${mensajeCorreo}`, 'success');
       await this.obtenerBeneficiarios();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      Swal.fire('Error', 'No se pudo agregar el beneficiario', 'error');
+      Swal.fire('Error', error?.message || 'No se pudo agregar el beneficiario', 'error');
     }
   }
 
@@ -223,12 +241,13 @@ export class Beneficiarios implements OnInit {
         },
         body: JSON.stringify(this.datosBeneficiario())
       });
-      if (!resp.ok) throw new Error('Error al actualizar beneficiario');
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok) throw new Error(data.error || data.mensaje || 'Error al actualizar beneficiario');
       Swal.fire('✅ Éxito', 'Beneficiario actualizado correctamente', 'success');
       await this.obtenerBeneficiarios();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      Swal.fire('Error', 'No se pudo actualizar el beneficiario', 'error');
+      Swal.fire('Error', error?.message || 'No se pudo actualizar el beneficiario', 'error');
     }
   }
 

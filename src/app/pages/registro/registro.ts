@@ -8,15 +8,33 @@ import Swal from 'sweetalert2';
 import { environment } from '../../../environments/environment';
 import { LegalService } from '../../services/legal.service';
 import { TelefonoInternacional } from '../../shared/telefono-internacional/telefono-internacional';
+import { SoloNumerosDirective } from '../../shared/solo-numeros.directive';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink, TelefonoInternacional],
+  imports: [FormsModule, CommonModule, RouterLink, TelefonoInternacional, SoloNumerosDirective],
   templateUrl: './registro.html',
   styleUrls: ['./registro.css']
 })
 export class Registro {
+  documentoEsNumerico(): boolean {
+    return this.usuario.tipo_documento !== 'OT';
+  }
+
+  ajustarDocumentoAlTipo(): void {
+    if (this.documentoEsNumerico()) {
+      this.usuario.documento = this.usuario.documento.replace(/\D/g, '');
+    }
+  }
+
+  filtrarDocumento(evento: Event): void {
+    if (!this.documentoEsNumerico()) return;
+    const input = evento.target as HTMLInputElement;
+    const limpio = input.value.replace(/\D/g, '');
+    input.value = limpio;
+    this.usuario.documento = limpio;
+  }
   // Definimos la URL usando el environment
   private apiUrl = `${environment.apiUrl}/usuarios`;
 

@@ -18,7 +18,7 @@
 
         <div class="form-group">
           <label>Tipo de Documento</label>
-          <select name="tipo_documento" [(ngModel)]="usuario.tipo_documento" required>
+          <select name="tipo_documento" [(ngModel)]="usuario.tipo_documento" (ngModelChange)="ajustarDocumentoAlTipo()" required>
             <option value="">Seleccione...</option>
             <option value="CC">Cédula de ciudadanía</option>
             <option value="CE">Cédula de extranjería</option>
@@ -29,7 +29,11 @@
 
         <div class="form-group">
           <label>Número de documento</label>
-          <input type="text" name="documento" [(ngModel)]="usuario.documento" required />
+          <input type="text" name="documento" [(ngModel)]="usuario.documento"
+                 [appSoloNumeros]="documentoEsNumerico()"
+                 [attr.inputmode]="documentoEsNumerico() ? 'numeric' : 'text'"
+                 (input)="filtrarDocumento($event)"
+                 maxlength="30" required />
         </div>
 
         <div class="form-group">

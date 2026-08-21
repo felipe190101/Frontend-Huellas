@@ -15,24 +15,24 @@
 
       <div class="input-group">
         <label>Almacenamiento (GB)</label>
-        <input type="number" [(ngModel)]="nuevoPlan.almacenamiento_max" name="almacenamiento_max" min="1" placeholder="Ej. 25" />
+        <input type="number" appSoloNumeros [(ngModel)]="nuevoPlan.almacenamiento_max" name="almacenamiento_max" min="1" step="1" inputmode="numeric" placeholder="Ej. 25" />
       </div>
 
       <div class="input-group">
         <label>Máx. Beneficiarios</label>
-        <input type="number" [(ngModel)]="nuevoPlan.beneficiarios_max" name="beneficiarios_max" min="1" placeholder="Ej. 3" />
+        <input type="number" appSoloNumeros [(ngModel)]="nuevoPlan.beneficiarios_max" name="beneficiarios_max" min="1" step="1" inputmode="numeric" placeholder="Ej. 3" />
       </div>
     </div>
 
     <div class="fila">
       <div class="input-group">
         <label>Precio mensual (COP)</label>
-        <input type="number" [(ngModel)]="nuevoPlan.precio_mensual" name="precio_mensual" min="0" placeholder="Ej. 15000" />
+        <input type="number" appSoloNumeros [(ngModel)]="nuevoPlan.precio_mensual" name="precio_mensual" min="0" step="1" inputmode="numeric" placeholder="Ej. 15000" />
       </div>
 
       <div class="input-group">
         <label>Precio anual (COP)</label>
-        <input type="number" [(ngModel)]="nuevoPlan.precio_anual" name="precio_anual" min="0" placeholder="Ej. 120000" />
+        <input type="number" appSoloNumeros [(ngModel)]="nuevoPlan.precio_anual" name="precio_anual" min="0" step="1" inputmode="numeric" placeholder="Ej. 120000" />
       </div>
     </div>
 
@@ -72,10 +72,10 @@
     <tr *ngFor="let plan of planes">
         <td data-label="Nombre"><input [(ngModel)]="plan.nombre_plan" /></td>
         <td data-label="Descripción"><input [(ngModel)]="plan.descripcion" /></td>
-        <td data-label="Almacenamiento (GB)"><input type="number" [(ngModel)]="plan.almacenamiento_max" /></td>
-        <td data-label="Beneficiarios"><input type="number" [(ngModel)]="plan.beneficiarios_max" /></td>
-        <td data-label="Precio mensual (COP)"><input type="number" [(ngModel)]="plan.precio_mensual" /></td>
-        <td data-label="Precio anual (COP)"><input type="number" [(ngModel)]="plan.precio_anual" /></td>
+        <td data-label="Almacenamiento (GB)"><input type="number" appSoloNumeros [(ngModel)]="plan.almacenamiento_max" min="1" step="1" inputmode="numeric" /></td>
+        <td data-label="Beneficiarios"><input type="number" appSoloNumeros [(ngModel)]="plan.beneficiarios_max" min="1" step="1" inputmode="numeric" /></td>
+        <td data-label="Precio mensual (COP)"><input type="number" appSoloNumeros [(ngModel)]="plan.precio_mensual" min="0" step="1" inputmode="numeric" /></td>
+        <td data-label="Precio anual (COP)"><input type="number" appSoloNumeros [(ngModel)]="plan.precio_anual" min="0" step="1" inputmode="numeric" /></td>
         <td data-label="Estado">
             <select [(ngModel)]="plan.estado">
             <option value="Activo">Activo</option>

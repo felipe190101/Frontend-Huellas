@@ -66,7 +66,7 @@ export class TelefonoInternacional implements AfterViewInit, OnChanges, OnDestro
     });
     this.vistaLista = true;
     this.sincronizarDesdeModelo();
-    this.telefonoInput.nativeElement.addEventListener('countrychange', () => this.actualizarPais());
+    this.telefonoInput.nativeElement.addEventListener('countrychange', () => this.actualizarPais(true));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -76,12 +76,18 @@ export class TelefonoInternacional implements AfterViewInit, OnChanges, OnDestro
     }
   }
 
-  actualizarNumero(): void {
+  actualizarNumero(desdeUsuario = true): void {
     const numero = this.telefonoInput.nativeElement.value.replace(/\D/g, '');
+    if (desdeUsuario) {
+      // Al editar manualmente deja de prevalecer el E.164 cargado inicialmente;
+      // durante la precarga se conserva para poder mostrar el número existente.
+      this._telefonoE164 = '';
+    }
+    this.telefonoInput.nativeElement.value = numero;
     this.nacionalChange.emit(numero);
   }
 
-  private actualizarPais(): void {
+  private actualizarPais(desdeUsuario = true): void {
     const pais = this.instancia?.getSelectedCountry();
     if (!pais?.iso2 || !pais.dialCode) return;
     const paisIso = pais.iso2.toUpperCase();
@@ -90,7 +96,7 @@ export class TelefonoInternacional implements AfterViewInit, OnChanges, OnDestro
     this._codigoPais = codigo;
     this.paisChange.emit(paisIso);
     this.codigoPaisChange.emit(codigo);
-    this.actualizarNumero();
+    this.actualizarNumero(desdeUsuario);
   }
 
   private sincronizarDesdeModelo(): void {
@@ -98,13 +104,13 @@ export class TelefonoInternacional implements AfterViewInit, OnChanges, OnDestro
 
     if (this.telefonoE164) {
       this.instancia.setNumber(this.telefonoE164);
-      queueMicrotask(() => this.actualizarPais());
+      queueMicrotask(() => this.actualizarPais(false));
       return;
     }
 
     this.instancia.setSelectedCountry(this.pais.toLowerCase() as Iso2);
     this.telefonoInput.nativeElement.value = this.nacional;
-    this.actualizarNumero();
+    this.actualizarNumero(false);
   }
 
   ngOnDestroy(): void {
